@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PoçoCalc Pro v7 — Poço Tubular Profundo</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=JetBrains+Mono:wght@400;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090d12;--bg2:#0f1720;--bg3:#162030;--bdr:#223040;--bdr2:#2d4060;--gold:#d4960f;--gold2:#f0b830;--org:#e05f20;--blue:#3d90d8;--green:#35b068;--red:#d84040;--txt:#d8e8f4;--txt2:#6888a8;--txt3:#3a5070}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;font-size:14px;min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;background:var(--bg2);border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px #0008}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--org));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-name{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:3px;line-height:1}
+.logo-name span{color:var(--gold)}
+.logo-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--txt3);letter-spacing:2px;margin-top:2px}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 28px;overflow-x:auto}
+.tab{padding:0 20px;height:46px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--txt3);border-bottom:3px solid transparent;cursor:pointer;transition:.2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Barlow',sans-serif}
+.tab:hover{color:var(--txt2)}.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.tab .n{background:var(--gold);color:#000;border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700}
+main{max-width:1480px;margin:0 auto;padding:24px 28px 60px}
+.pane{display:none}.pane.on{display:block;animation:fadeup .25s ease}
+@keyframes fadeup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent 55%);opacity:.4}
+.ct{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--gold);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ctr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.f{display:flex;flex-direction:column;gap:5px}
+label{font-size:11.5px;color:var(--txt2);font-weight:500}
+label .req{color:var(--gold);margin-left:2px}
+label .hint{color:var(--txt3);font-size:10px;font-weight:400;margin-left:4px}
+label .unit{color:var(--org);font-size:10px;font-weight:600;margin-left:4px}
+input,select{background:var(--bg3);border:1px solid var(--bdr);border-radius:6px;color:var(--txt);font-family:'JetBrains Mono',monospace;font-size:13px;padding:8px 11px;transition:.18s;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,150,15,.1)}
+input[readonly]{background:rgba(212,150,15,.06);border-style:dashed;color:var(--gold2);font-weight:700;cursor:default}
+select option{background:var(--bg3)}
+input[type=number]{-moz-appearance:textfield}input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.18s;border:none}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#a07000);color:#000}.btn-gold:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-out{background:transparent;border:1px solid var(--bdr2);color:var(--txt2)}.btn-out:hover{border-color:var(--gold);color:var(--gold)}
+.btn-ghost{background:transparent;color:var(--txt3)}.btn-ghost:hover{color:var(--txt2)}
+.btn-red{background:rgba(216,64,64,.1);border:1px solid var(--red);color:var(--red)}.btn-red:hover{background:rgba(216,64,64,.2)}
+.btn-grn{background:rgba(53,176,104,.1);border:1px solid var(--green);color:var(--green)}.btn-grn:hover{background:rgba(53,176,104,.2)}
+.btn-blue{background:rgba(61,144,216,.1);border:1px solid var(--blue);color:var(--blue)}.btn-blue:hover{background:rgba(61,144,216,.2)}
+.btn-purple{background:rgba(160,90,220,.1);border:1px solid #a05adc;color:#c080f0}.btn-purple:hover{background:rgba(160,90,220,.2)}
+.btn-sm{padding:6px 12px;font-size:12px}.btn-lg{padding:12px 28px;font-size:15px;border-radius:9px}
+.ibox{background:rgba(61,144,216,.07);border:1px solid rgba(61,144,216,.25);border-radius:7px;padding:10px 13px;font-size:12px;color:var(--txt2);display:flex;gap:9px;line-height:1.5}
+.gbox{background:rgba(53,176,104,.07);border:1px solid rgba(53,176,104,.25);border-radius:7px;padding:10px 13px;font-size:12px;color:#90e8b8;display:flex;gap:9px;line-height:1.5}
+.ybox{background:rgba(212,150,15,.07);border:1px solid rgba(212,150,15,.25);border-radius:7px;padding:10px 13px;font-size:12px;color:var(--gold2);display:flex;gap:9px;line-height:1.5}
+.wbox{background:rgba(216,64,64,.07);border:1px solid rgba(216,64,64,.25);border-radius:7px;padding:10px 13px;font-size:12px;color:#e8a0a0;display:flex;gap:9px;line-height:1.5}
+.sdiv{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:3px;color:var(--txt3);margin:16px 0 10px;display:flex;align-items:center;gap:10px}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.chk{display:flex;align-items:center;gap:9px;cursor:pointer;padding:3px 0}
+.chk input[type=checkbox]{width:15px;height:15px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+.chk span{font-size:13px;color:var(--txt)}
+.prof-bar{display:flex;height:22px;border-radius:6px;overflow:hidden;margin-top:6px;border:1px solid var(--bdr)}
+.prof-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000;transition:width .4s;min-width:0;overflow:hidden;white-space:nowrap}
+.rbox{background:linear-gradient(135deg,rgba(212,150,15,.07),rgba(224,95,32,.04));border:1px solid rgba(212,150,15,.28);border-radius:12px;padding:26px;margin-top:18px}
+.rtitle{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:3px;color:var(--gold);margin-bottom:20px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:13px;text-align:center}
+.kv{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--gold)}
+.kl{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.sl{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px}
+.sl:last-child{border:none}
+.sll{color:var(--txt2)}.slv{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--txt)}
+.stotal{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid var(--gold)}
+.stlbl{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px}
+.stval{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--gold)}
+.twrap{overflow-x:auto;border-radius:9px;border:1px solid var(--bdr)}
+table.ht{width:100%;border-collapse:collapse}
+table.ht th{padding:10px 13px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt3);font-family:'JetBrains Mono',monospace;border-bottom:1px solid var(--bdr);background:var(--bg3);white-space:nowrap}
+table.ht td{padding:10px 13px;font-size:13px;border-bottom:1px solid rgba(34,48,64,.4)}
+table.ht tr:last-child td{border:none}
+table.ht tr:hover td{background:rgba(255,255,255,.015)}
+.tdm{font-family:'JetBrains Mono',monospace}
+.acts{display:flex;gap:5px}
+.etapa-total{background:rgba(212,150,15,.08);border:1px solid rgba(212,150,15,.3);border-radius:8px;padding:12px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.etapa-total-lbl{font-size:12px;color:var(--txt2);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.etapa-total-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--gold2)}
+.mbg{display:none;position:fixed;inset:0;background:#000c;z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.mbg.on{display:flex}
+.mbox{background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:28px;min-width:400px;max-width:92vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px #000a;animation:fadeup .2s ease}
+.mt-d{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:var(--red);margin-bottom:8px}
+.mt-i{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+.mbody{color:var(--txt2);font-size:13px;line-height:1.7;margin-bottom:16px}
+.mact{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.sep{background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:14px;margin-bottom:10px}
+.opt-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.opt-row:last-child{border:none}
+.opt-lbl{flex:0 0 220px;font-size:12px;color:var(--txt2)}
+.opt-fields{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.opt-fields input{flex:1;min-width:100px}
+.hidden{display:none!important}
+.fbetween{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.frow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--txt2)}.sm{font-size:12px}
+.tgold{color:var(--gold)}.tcenter{text-align:center}
+/* PDF — só resumo */
+.print-full .only-resumo{display:none!important}
+.print-resumo .only-full{display:none!important}
+@media print{
+  header,.tabs,.hbtns,.no-print{display:none!important}
+  body{background:#fff!important;color:#000!important;font-size:11px}
+  .card{background:#fff!important;border:1px solid #ccc!important;page-break-inside:avoid;margin-bottom:8px;padding:12px}
+  .card::after{display:none}
+  .rbox{background:#f9f9f9!important;border:1px solid #ddd!important;padding:16px}
+  .kpi{background:#f0f0f0!important;border:1px solid #ccc!important}
+  .kv,.stval,.etapa-total-val{color:#333!important}
+  .etapa-total{background:#f5f5f5!important;border:1px solid #ccc!important}
+  input,select{background:#f5f5f5!important;color:#000!important;border:1px solid #ccc!important;font-size:11px!important}
+  input[readonly]{background:#fffbe6!important;color:#333!important}
+  .pane.on{display:block!important}
+  #pane-hist,#pane-cfg{display:none!important}
+  .hidden{display:none!important}
+  label{color:#555!important}
+  .sdiv{color:#888!important}
+  .ct{color:#333!important}
+  .sll{color:#555!important}.slv{color:#000!important}
+  .ibox,.gbox,.ybox,.wbox{background:#f5f5f5!important;border:1px solid #ddd!important;color:#555!important}
+  .prof-seg{color:#000!important}
+}
+</style>
+
+<style id="print-extra">
+/* Modo resumo: oculta todos os cards de input, mostra apenas resultado */
+body.print-resumo .only-full { display: none !important; }
+body.print-resumo #resultBox { display: block !important; }
+/* Modo completo: mostra tudo */
+body.print-full .only-full { display: block !important; }
+body.print-full .only-resumo { display: block !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="logo-icon">&#x26CF;</div>
+    <div>
+      <div class="logo-name">PO&#xC7;O<span>CALC</span> PRO</div>
+      <div class="logo-sub">PO&#xC7;O TUBULAR PROFUNDO v7.0</div>
+    </div>
+  </div>
+  <div class="hbtns">
+    <button class="btn btn-out btn-sm" onclick="importCSV()">&#x2B06; Restaurar</button>
+    <button class="btn btn-grn btn-sm" onclick="exportCSV()">&#x2B07; Backup / Export</button>
+    <button class="btn btn-purple btn-sm" onclick="abrirModalPrint()">&#x1F4C4; PDF / Imprimir</button>
+    <input type="file" id="jsonIn" accept=".json" style="display:none" onchange="handleImportJSON(event)">
+    <input type="file" id="csvIn"  accept=".csv"  style="display:none" onchange="handleImportCSV(event)">
+  </div>
+</header>
+<div class="tabs">
+  <button class="tab on" onclick="goTab('novo')" id="t-novo">&#x1F527; Novo Or&#xE7;amento</button>
+  <button class="tab" onclick="goTab('hist')" id="t-hist">&#x1F4CB; Hist&#xF3;rico <span class="n" id="hcnt">0</span></button>
+  <button class="tab" onclick="goTab('cfg')" id="t-cfg">&#x2699; Configura&#xE7;&#xF5;es</button>
+</div>
+<main>
+<div class="pane on" id="pane-novo">
+
+<!-- IDENTIFICAÇÃO -->
+<div class="card only-resumo" style="display:block">
+<div class="ct">&#x1F4C1; Identifica&#xE7;&#xE3;o do Projeto</div>
+<div class="g4">
+  <div class="f s2"><label>Nome do Projeto <span class="req">*</span></label><input type="text" id="pNome" placeholder="Ex: Fazenda Boa Vista &#x2014; Po&#xE7;o 01"></div>
+  <div class="f"><label>N&#xBA; do Po&#xE7;o <span class="req">*</span></label><input type="text" id="pPoco" placeholder="Ex: PTP-001/2025"></div>
+  <div class="f"><label>Data</label><input type="date" id="pData"></div>
+  <div class="f"><label>Cliente</label><input type="text" id="pCliente"></div>
+  <div class="f"><label>Munic&#xED;pio / UF</label><input type="text" id="pLocal"></div>
+  <div class="f s2"><label>Observa&#xE7;&#xF5;es</label><input type="text" id="pObs"></div>
+</div>
+</div>
+
+<!-- PERFIL -->
+<div class="card only-full">
+<div class="ct">&#x1FAA8; Perfil Litol&#xF3;gico <span style="color:var(--txt3);font-size:9px;margin-left:8px">ESPESSURA EM METROS</span></div>
+<div class="ibox" style="margin-bottom:14px"><span>&#x2139;</span><div>
+  Insira espessura em <b>metros (m)</b>. Tubo de boca &#x2192; primeiros metros (E1). Sedimento abaixo do tubo &#x2192; E2. Rocha S&#xE3; &#x2192; E3 (DTH).
+</div></div>
+<div class="g4">
+  <div class="f"><label>Argila / Silte <span class="unit">m</span></label><input type="number" id="mArgila" value="0" min="0" step="1" oninput="onPerfChange()"></div>
+  <div class="f"><label>Areia <span class="unit">m</span></label><input type="number" id="mAreia" value="0" min="0" step="1" oninput="onPerfChange()"></div>
+  <div class="f"><label>Cascalho <span class="unit">m</span></label><input type="number" id="mCascalho" value="0" min="0" step="1" oninput="onPerfChange()"></div>
+  <div class="f"><label>Rocha Alterada <span class="unit">m</span></label><input type="number" id="mRochaAlt" value="0" min="0" step="1" oninput="onPerfChange()"></div>
+  <div class="f"><label>Rocha S&#xE3; <span class="unit">m</span></label><input type="number" id="mRochaSa" value="0" min="0" step="1" oninput="onPerfChange()"></div>
+  <div class="f"><label>Profundidade Total (calc.) <span class="unit">m</span></label><input type="text" id="profTotal" readonly></div>
+  <div class="f"><label>Sedimento Total (calc.) <span class="unit">m</span></label><input type="text" id="profSedCalc" readonly></div>
+  <div class="f"><label>Rocha S&#xE3; (calc.) <span class="unit">m</span></label><input type="text" id="profRocaCalc" readonly></div>
+</div>
+<div id="profBar" class="prof-bar mt8"></div>
+</div>
+
+<!-- COMBUSTÍVEL E JORNADA -->
+<div class="card only-full">
+<div class="ct">&#x26FD; Combust&#xED;vel &amp; Jornada</div>
+<div class="g4">
+  <div class="f"><label>Pre&#xE7;o Diesel <span class="unit">R$/L</span> <span class="req">*</span></label><input type="number" id="diesel" placeholder="6.50" step="0.01" oninput="calc()"></div>
+  <div class="f"><label>Horas Trabalhadas / Dia</label><input type="number" id="hDia" value="10" oninput="calc()"></div>
+  <div class="f"><label>Gasolina &#x2014; deslocamento <span class="unit">R$/L</span></label><input type="number" id="cotGasolina" placeholder="6.20" step="0.01" oninput="calc()"></div>
+</div>
+</div>
+
+<!-- VELOCIDADES -->
+<div class="card only-full">
+<div class="ct">&#x23F1; Velocidades de Avan&#xE7;o &amp; Consumos</div>
+<div class="ybox" style="margin-bottom:14px"><span>&#x26A1;</span><div>
+  Compressor: <b>&#xFA;nico campo</b>, usado em todo c&#xE1;lculo DTH. Di&#xE2;metros em <b>polegadas (")</b>. Velocidades em <b>m/dia</b>.
+</div></div>
+<div class="sdiv">Consumos de M&#xE1;quinas <span class="unit" style="color:var(--org);font-size:10px">L/h</span></div>
+<div class="g4">
+  <div class="f"><label>Sonda Rotativa <span class="unit">L/h</span></label><input type="number" id="litSondaRot" value="20" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Bomba de Lama <span class="unit">L/h</span></label><input type="number" id="litLama" value="8" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Sonda DTH <span class="unit">L/h</span></label><input type="number" id="litSondaDTH" value="32" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Compressor <span class="unit">L/h</span> <span class="hint">&#xFA;nico, global</span></label><input type="number" id="litComp" value="25" step="0.5" oninput="calc()"></div>
+</div>
+<div class="sdiv">Sedimento &#x2014; Rotativa (Guia 8&#xBD;" &#x2192; Reab. 12&#xBC;" &#x2192; Reab. 13")</div>
+<div class="g4">
+  <div class="f"><label>Guia 8&#xBD;" &#x2014; Argila <span class="unit">m/dia</span></label><input type="number" id="velArgG" value="6" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 12&#xBC;" &#x2014; Argila <span class="unit">m/dia</span></label><input type="number" id="velArgR12" value="7" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 13" &#x2014; Argila <span class="unit">m/dia</span></label><input type="number" id="velArgR13" value="8" step="0.5" oninput="calc()"></div>
+  <div class="f"></div>
+  <div class="f"><label>Guia 8&#xBD;" &#x2014; Areia/Casc. <span class="unit">m/dia</span></label><input type="number" id="velAreG" value="18" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 12&#xBC;" &#x2014; Areia/Casc. <span class="unit">m/dia</span></label><input type="number" id="velAreR12" value="22" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 13" &#x2014; Areia/Casc. <span class="unit">m/dia</span></label><input type="number" id="velAreR13" value="24" step="0.5" oninput="calc()"></div>
+  <div class="f"></div>
+  <div class="f"><label>Guia 8&#xBD;" &#x2014; Rocha Alt. <span class="unit">m/dia</span></label><input type="number" id="velRocAltG" value="10" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 12&#xBC;" &#x2014; Rocha Alt. <span class="unit">m/dia</span></label><input type="number" id="velRocAltR12" value="13" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Reab. 13" &#x2014; Rocha Alt. <span class="unit">m/dia</span></label><input type="number" id="velRocAltR13" value="14" step="0.5" oninput="calc()"></div>
+  <div class="f"></div>
+</div>
+<div class="sdiv">Rocha S&#xE3; &#x2014; DTH (furo &#xFA;nico, sem reabertura)</div>
+<div class="g4">
+  <div class="f"><label>Vel. DTH <span class="unit">m/dia</span></label><input type="number" id="velRocSa" value="35" step="0.5" oninput="calc()"></div>
+</div>
+</div>
+
+<!-- ETAPA 1 -->
+<div class="card only-full">
+<div class="ctr">
+  <div class="ct" style="margin-bottom:0">&#x1F3E5; Etapa 1 &#x2014; Tubo de Boca / Selo Sanit&#xE1;rio</div>
+  <label class="chk"><input type="checkbox" id="temSelo" checked onchange="toggleSelo();calc()"><span>Incluir</span></label>
+</div>
+<div id="seloBox">
+<div class="ibox" style="margin:10px 0 14px"><span>&#x2139;</span><div>
+  Sequ&#xEA;ncia: <b style="color:#35b068">Guia 8&#xBD;"</b> &#x2192; <b style="color:#d4960f">Reab. 12&#xBD;"</b> &#x2192; <b style="color:#e05f20">Reab. 17&#xBD;"</b> &#x2192; <b style="color:#d84040">Reab. 22"</b> &#x2192; tubo a&#xE7;o 14" + cimenta&#xE7;&#xE3;o anelar.
+  Di&#xE2;metros em <b>polegadas (")</b>. Esta profundidade &#xE9; deduzida do sedimento E2.
+</div></div>
+<div class="g4">
+  <div class="f"><label>Prof. Tubo de Boca <span class="unit">m</span> <span class="req">*</span></label><input type="number" id="seloProf" value="20" oninput="onPerfChange()"></div>
+  <div class="f"><label>Vel. Guia 8&#xBD;" <span class="unit">m/dia</span></label><input type="number" id="seloVG" value="6" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Vel. Reab. 12&#xBD;" <span class="unit">m/dia</span></label><input type="number" id="seloVR1" value="7" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Vel. Reab. 17&#xBD;" <span class="unit">m/dia</span></label><input type="number" id="seloVR2" value="7" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Vel. Reab. 22" <span class="unit">m/dia</span></label><input type="number" id="seloVR3" value="8" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Consumo Sonda E1 <span class="unit">L/h</span></label><input type="number" id="seloLitSonda" value="20" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Consumo Bomba E1 <span class="unit">L/h</span></label><input type="number" id="seloLitLama" value="8" step="0.5" oninput="calc()"></div>
+</div>
+<div class="sdiv">Materiais E1</div>
+<div class="g4">
+  <div class="f"><label>Tubo A&#xE7;o 14" <span class="unit">R$/m</span></label><input type="number" id="seloTuboCusto" placeholder="Ex: 380" oninput="calc()"></div>
+  <div class="f"><label>Sacos Cimento (anelar)</label><input type="number" id="seloCimSacos" placeholder="Ex: 6" oninput="calc()"></div>
+  <div class="f"><label>Cimento <span class="unit">R$/saco</span></label><input type="number" id="seloCimPreco" placeholder="Ex: 35" oninput="syncCimPreco()"></div>
+</div>
+<div class="sdiv">Totais E1</div>
+<div class="g4">
+  <div class="f"><label>Dias</label><input type="text" id="seloDias" readonly></div>
+  <div class="f"><label>Horas</label><input type="text" id="seloHoras" readonly></div>
+  <div class="f"><label>Diesel <span class="unit">L</span></label><input type="text" id="seloLitros" readonly></div>
+  <div class="f"><label>Custo Combust&#xED;vel</label><input type="text" id="seloCombTotal" readonly></div>
+</div>
+<div class="etapa-total">
+  <span class="etapa-total-lbl">&#x1F3E5; Custo Total &#x2014; Etapa 1</span>
+  <span class="etapa-total-val" id="seloCustoTotal">R$ 0,00</span>
+</div>
+</div>
+</div>
+
+<!-- ETAPA 2 -->
+<div class="card only-full">
+<div class="ct">&#x1F4AB; Etapa 2 &#x2014; Sedimento (Rotativa)</div>
+<div class="ibox" style="margin-bottom:14px"><span>&#x2139;</span><div>
+  Inicia <b style="color:var(--gold)">abaixo do tubo de boca</b>. profE2 = sedTotal &#x2212; tuboBoca.
+  Sequ&#xEA;ncia: Guia 8&#xBD;" &#x2192; Reab. 12&#xBC;" &#x2192; Reab. 13". Di&#xE2;metros em polegadas.
+</div></div>
+<div class="g4">
+  <div class="f"><label>Prof. E2 (calc.) <span class="unit">m</span></label><input type="text" id="sedProfCalc" readonly></div>
+  <div class="f"><label>Vel. m&#xE9;d. Guia 8&#xBD;" (calc.)</label><input type="text" id="sedVG" readonly></div>
+  <div class="f"><label>Vel. m&#xE9;d. Reab. 12&#xBC;" (calc.)</label><input type="text" id="sedVR12" readonly></div>
+  <div class="f"><label>Vel. m&#xE9;d. Reab. 13" (calc.)</label><input type="text" id="sedVR13" readonly></div>
+  <div class="f"><label>Consumo Sonda E2 <span class="unit">L/h</span></label><input type="number" id="sedLitSonda" value="20" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Consumo Bomba E2 <span class="unit">L/h</span></label><input type="number" id="sedLitLama" value="8" step="0.5" oninput="calc()"></div>
+</div>
+<div class="sdiv">Revestimento E2</div>
+<div class="g4">
+  <div class="f s2"><label>Material</label>
+    <select id="sedTuboTipo">
+      <optgroup label="A&#xE7;o Carbono NBR 5580 (4,75mm)">
+        <option value="carbono_nold">A&#xE7;o Carbono NBR 5580 + Filtros Nold 0,75mm</option>
+        <option value="carbono_espiral">A&#xE7;o Carbono NBR 5580 + Filtros Espiralados</option>
+      </optgroup>
+      <optgroup label="A&#xE7;o Galvanizado NBR 5580 (4,75mm)">
+        <option value="galv_nold">A&#xE7;o Galvanizado NBR 5580 + Filtros Nold</option>
+        <option value="galv_espiral">A&#xE7;o Galvanizado NBR 5580 + Filtros Espiralados</option>
+      </optgroup>
+      <optgroup label="Tubo Geomec&#xE2;nico">
+        <option value="geomec_leve">Geomec&#xE2;nico Classe Leve (abertura 0,75mm)</option>
+        <option value="geomec_std">Geomec&#xE2;nico Standard (abertura 0,75mm)</option>
+        <option value="geomec_ref">Geomec&#xE2;nico Refor&#xE7;ado (abertura 0,75mm)</option>
+      </optgroup>
+      <optgroup label="A&#xE7;o Inox">
+        <option value="inox_nold">A&#xE7;o Inox NBR 5580 + Filtros Nold</option>
+        <option value="inox_espiral">A&#xE7;o Inox NBR 5580 + Filtros Espiralados</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="f"><label>Di&#xE2;m. Tubo <span class="unit">"</span></label>
+    <select id="sedTuboDiam">
+      <option value='4"'>4"</option><option value='5"'>5"</option><option value='6"' selected>6"</option>
+      <option value='8"'>8"</option><option value='10"'>10"</option><option value='outro'>Outro</option>
+    </select>
+  </div>
+  <div class="f"></div>
+  <div class="f"><label>Custo Tubo Liso <span class="unit">R$/m</span></label><input type="number" id="sedTuboCusto" placeholder="Ex: 85" oninput="calc()"></div>
+  <div class="f"><label>Metros de Tubo Liso <span class="unit">m</span></label><input type="number" id="sedTuboM" placeholder="Ex: 100" oninput="calc()"></div>
+</div>
+<div class="sdiv">Completa&#xE7;&#xE3;o Anelar E2</div>
+<div class="g2" style="margin-bottom:10px">
+  <label class="chk"><input type="checkbox" id="sedCaptacao" onchange="toggleSedCaptacao();calc()"><span>Com capta&#xE7;&#xE3;o (filtros ranhurados + pr&#xE9;-filtro areia graduada)</span></label>
+  <label class="chk"><input type="checkbox" id="sedCimento" checked onchange="calc()"><span>Cimenta&#xE7;&#xE3;o anelar</span></label>
+</div>
+<div id="sedFiltroBox" class="hidden sep">
+  <div class="g4">
+    <div class="f"><label>Filtro Ranhurado <span class="unit">R$/m</span></label><input type="number" id="sedFiltroCusto" placeholder="Ex: 120" oninput="calc()"></div>
+    <div class="f"><label>Metros de Filtro <span class="unit">m</span></label><input type="number" id="sedFiltroM" placeholder="Ex: 30" oninput="calc()"></div>
+    <div class="f"><label>Di&#xE2;m. Furo <span class="unit">"</span></label>
+      <select id="sedFuroDiamSel" onchange="calcPrefiltro()">
+        <option value="0.3302">13" (330,2mm)</option><option value="0.3048">12" (304,8mm)</option>
+        <option value="0.2413">9½" (241,3mm)</option><option value="0.2159">8½" (215,9mm)</option>
+      </select>
+    </div>
+    <div class="f"><label>Di&#xE2;m. Tubo Revest. <span class="unit">"</span></label>
+      <select id="sedTuboDiamSel" onchange="calcPrefiltro()">
+        <option value="0.168">6" (168mm)</option><option value="0.140">5" (140mm)</option>
+        <option value="0.114">4" (114mm)</option><option value="0.219">8" (219mm)</option>
+      </select>
+    </div>
+    <div class="f"><label>Comprimento Anelar <span class="unit">m</span></label><input type="number" id="sedAnelarM" placeholder="Ex: 100" oninput="calcPrefiltro()"></div>
+    <div class="f"><label>Volume Areia (calc.) <span class="unit">m&#xB3;</span></label><input type="text" id="sedAreiaMm3" readonly></div>
+    <div class="f"><label>Areia Graduada <span class="unit">R$/m&#xB3;</span></label><input type="number" id="sedAreiaCusto" placeholder="Ex: 180" oninput="calc()"></div>
+  </div>
+</div>
+<div id="sedCimentoBox" class="sep">
+  <div class="g4">
+    <div class="f"><label>Sacos Cimento (anelar E2)</label><input type="number" id="sedCimSacos" placeholder="Ex: 15" oninput="calc()"></div>
+    <div class="f"><label>Cimento <span class="unit">R$/saco</span></label><input type="number" id="sedCimPreco" placeholder="Ex: 35" oninput="calc()"></div>
+    <div class="f"><label>Bentonita / Aditivos <span class="unit">R$</span></label><input type="number" id="sedCimAdit" placeholder="Ex: 200" oninput="calc()"></div>
+  </div>
+</div>
+<div class="sdiv">Totais E2</div>
+<div class="g4">
+  <div class="f"><label>Dias</label><input type="text" id="sedDias" readonly></div>
+  <div class="f"><label>Horas</label><input type="text" id="sedHoras" readonly></div>
+  <div class="f"><label>Diesel <span class="unit">L</span></label><input type="text" id="sedLitros" readonly></div>
+  <div class="f"><label>Custo Combust&#xED;vel</label><input type="text" id="sedCombTotal" readonly></div>
+</div>
+<div class="etapa-total">
+  <span class="etapa-total-lbl">&#x1F4AB; Custo Total &#x2014; Etapa 2</span>
+  <span class="etapa-total-val" id="sedCustoTotal">R$ 0,00</span>
+</div>
+</div>
+
+<!-- ETAPA 3 -->
+<div class="card only-full">
+<div class="ct">&#x1FAA8; Etapa 3 &#x2014; Rocha S&#xE3; (DTH)</div>
+<div class="ibox" style="margin-bottom:14px"><span>&#x2139;</span><div>
+  Furo &#xFA;nico sem reabertura. Sonda DTH + Compressor (consumo global configurado em Velocidades).
+  Profundidade = metros de Rocha S&#xE3; do perfil.
+</div></div>
+<div class="g4">
+  <div class="f"><label>Prof. E3 (calc.) <span class="unit">m</span></label><input type="text" id="rocProfCalc" readonly></div>
+  <div class="f"><label>Velocidade DTH (calc.) <span class="unit">m/dia</span></label><input type="text" id="rocVel" readonly></div>
+  <div class="f"><label>Consumo Sonda DTH <span class="unit">L/h</span> <span class="hint">auto de Velocidades</span></label><input type="text" id="rocLitSondaInfo" readonly></div>
+  <div class="f"><label>Consumo Compressor <span class="unit">L/h</span> <span class="hint">auto de Velocidades</span></label><input type="text" id="rocLitCompInfo" readonly></div>
+  <div class="f"><label>Custo Bit DTH <span class="unit">R$</span></label><input type="number" id="rocBitCusto" placeholder="Ex: 1800" oninput="calc()"></div>
+  <div class="f"><label>Vida &#xFA;til Bit <span class="unit">m</span></label><input type="number" id="rocBitVida" value="150" step="10" oninput="calc()"></div>
+</div>
+<div class="sdiv">Totais E3</div>
+<div class="g4">
+  <div class="f"><label>Dias</label><input type="text" id="rocDias" readonly></div>
+  <div class="f"><label>Horas</label><input type="text" id="rocHoras" readonly></div>
+  <div class="f"><label>Diesel <span class="unit">L</span></label><input type="text" id="rocLitros" readonly></div>
+  <div class="f"><label>Bits (qtd)</label><input type="text" id="rocBits" readonly></div>
+</div>
+<div class="etapa-total">
+  <span class="etapa-total-lbl">&#x1FAA8; Custo Total &#x2014; Etapa 3</span>
+  <span class="etapa-total-val" id="rocCustoTotal">R$ 0,00</span>
+</div>
+</div>
+
+<!-- CANTEIRO -->
+<div class="card only-full">
+<div class="ct">&#x1F3D7; Canteiro de Obras</div>
+<div class="sdiv">Tapume</div>
+<div class="g4">
+  <div class="f"><label>Tapume <span class="unit">R$/m</span></label><input type="number" id="tapCusto" placeholder="Ex: 35" oninput="calc()"></div>
+  <div class="f"><label>Metros de Tapume <span class="unit">m</span></label><input type="number" id="tapM" placeholder="Ex: 40" oninput="calc()"></div>
+</div>
+<div class="sdiv">Caixa de Lama &#x2014; Alvenaria (tijolo 24&#xD7;14&#xD7;11,5 cm)</div>
+<div class="ibox" style="margin-bottom:12px"><span>&#x2139;</span><div>
+  Base: 12 tijolos/m&#xB7;fiada (2 faces + fundo), +5% quebra. Argamassa: 10 sacos areia / 1 saco cimento.
+  Reboco: 15 kg massa/m&#xB2;. &#xC1;rea = ml &#xD7; fiadas &#xD7; 0,115m. Campos edit&#xE1;veis para ajuste.
+</div></div>
+<div class="g4">
+  <div class="f"><label>Metro Linear <span class="unit">m</span></label><input type="number" id="cxLamaML" placeholder="Ex: 8" step="0.5" oninput="calcCaixaLama()"></div>
+  <div class="f"><label>N&#xBA; de Fiadas <span class="hint">padr&#xE3;o 5</span></label><input type="number" id="cxLamaFiadas" value="5" oninput="calcCaixaLama()"></div>
+  <div class="f"><label>&#xC1;rea Alvenaria (calc.) <span class="unit">m&#xB2;</span></label><input type="text" id="cxLamaArea" readonly></div>
+  <div class="f"><label>Tijolos (calc.) <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaTijolos" oninput="calc()"></div>
+  <div class="f"><label>Sacos Cimento assentamento (calc.) <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaCimSacos" oninput="calc()"></div>
+  <div class="f"><label>Sacos Areia assentamento (calc.) <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaAreiaSacos" oninput="calc()"></div>
+  <div class="f"><label>Massa Reboco (calc.) <span class="unit">kg</span> <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaMassaKg" oninput="calc()"></div>
+  <div class="f"><label>Sacos Areia reboco (calc.) <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaAreiaRebocoSacos" oninput="calc()"></div>
+  <div class="f"><label>Custo Tijolo <span class="unit">R$/unid.</span></label><input type="number" id="cxLamaTijoloCusto" placeholder="Ex: 1.20" step="0.01" oninput="calc()"></div>
+  <div class="f"><label>Custo Saco Areia <span class="unit">R$/saco</span></label><input type="number" id="cxLamaAreiaCusto" placeholder="Ex: 18" step="0.01" oninput="calc()"></div>
+  <div class="f"><label>Custo Massa Reboco <span class="unit">R$/saco 20kg</span></label><input type="number" id="cxLamaMassaCusto" placeholder="Ex: 25" step="0.01" oninput="calc()"></div>
+  <div class="f"><label>H/H assentamento (calc.) <span class="hint">edit&#xE1;vel</span></label><input type="number" id="cxLamaHH" oninput="calc()"></div>
+  <div class="f"><label>Custo H/H <span class="unit">R$/h</span></label><input type="number" id="cxLamaHHCusto" placeholder="Ex: 18" oninput="calc()"></div>
+</div>
+<div class="sdiv">Loca&#xE7;&#xE3;o</div>
+<div class="g4">
+  <div class="f"><label>Ca&#xE7;ambas <span class="unit">R$</span></label><input type="number" id="locCacamba" placeholder="Ex: 800" oninput="calc()"></div>
+  <div class="f"><label>Banheiro Qu&#xED;mico <span class="unit">R$/sem.</span></label><input type="number" id="locBanheiroSem" placeholder="Ex: 350" oninput="calc()"></div>
+  <div class="f"><label>N&#xBA; Semanas <span class="hint">sugerido auto, edit&#xE1;vel</span></label><input type="number" id="locSemanas" placeholder="Auto" oninput="calc()"></div>
+  <div class="f"><label>Outros Loca&#xE7;&#xE3;o <span class="unit">R$</span></label><input type="number" id="locOutros" placeholder="Ex: 300" oninput="calc()"></div>
+</div>
+</div>
+
+<!-- BOMBA E ELÉTRICA -->
+<div class="card only-full">
+<div class="ct">&#x1F4A7; Bomba, Coluna &amp; El&#xE9;trica</div>
+<div class="g4">
+  <div class="f"><label>Tipo de Bomba</label>
+    <select id="bombTipo"><option>Submersa el&#xE9;trica</option><option>Centr&#xED;fuga superf&#xED;cie</option><option>H&#xE9;lico-centr&#xED;fuga</option><option>Manual / N&#xE3;o incluso</option></select>
+  </div>
+  <div class="f"><label>Custo Bomba <span class="unit">R$</span></label><input type="number" id="bombCusto" placeholder="Ex: 4800" oninput="calc()"></div>
+  <div class="f"><label>Pot&#xEA;ncia <span class="unit">CV</span></label><input type="number" id="bombCV" placeholder="Ex: 3" step="0.5"></div>
+  <div class="f"><label>Vaz&#xE3;o <span class="unit">m&#xB3;/h</span></label><input type="number" id="bombVazao" placeholder="Ex: 5" step="0.1"></div>
+  <div class="f"><label>Cabo Energia <span class="unit">R$/m</span></label><input type="number" id="caboEnergCusto" placeholder="Ex: 18" oninput="calc()"></div>
+  <div class="f"><label>Comprimento Cabo Energia <span class="unit">m</span></label><input type="number" id="caboEnergM" placeholder="Ex: 180" oninput="calc()"></div>
+  <div class="f"><label>Cabo Sinal <span class="unit">R$/m</span></label><input type="number" id="caboSinalCusto" placeholder="Ex: 4" oninput="calc()"></div>
+  <div class="f"><label>Comprimento Cabo Sinal <span class="unit">m</span></label><input type="number" id="caboSinalM" placeholder="Ex: 180" oninput="calc()"></div>
+  <div class="f"><label>Coluna Recalque <span class="unit">R$/m</span></label><input type="number" id="colCusto" placeholder="Ex: 18" oninput="calc()"></div>
+  <div class="f"><label>Di&#xE2;m. Coluna <span class="unit">"</span></label>
+    <select id="colDiam"><option>1"</option><option>1.1/4"</option><option>1.1/2"</option><option>2"</option><option>2.1/2"</option><option>3"</option></select>
+  </div>
+  <div class="f"><label>Comprimento Coluna <span class="unit">m</span></label><input type="number" id="colM" placeholder="Ex: 170" oninput="calc()"></div>
+  <div class="f"><label>Tubo N&#xED;vel 3/4" <span class="unit">R$/m</span></label><input type="number" id="tubNivCusto" placeholder="Ex: 6" oninput="calc()"></div>
+  <div class="f"><label>Comprimento Tubo N&#xED;vel <span class="unit">m</span></label><input type="number" id="tubNivM" placeholder="Ex: 200" oninput="calc()"></div>
+</div>
+<div class="sdiv">Itens Opcionais</div>
+<div id="optItems">
+  <div class="opt-row"><label class="chk opt-lbl"><input type="checkbox" id="optReg" onchange="calc()"><span>Registros e Conex&#xF5;es</span></label><div class="opt-fields"><input type="number" id="optRegCusto" placeholder="R$" oninput="calc()"></div></div>
+  <div class="opt-row"><label class="chk opt-lbl"><input type="checkbox" id="optCavalor" onchange="calc()"><span>Cavalete</span></label><div class="opt-fields"><input type="number" id="optCavaleteCusto" placeholder="R$" oninput="calc()"></div></div>
+  <div class="opt-row"><label class="chk opt-lbl"><input type="checkbox" id="optLaje" onchange="calc()"><span>Laje / Tampa</span></label><div class="opt-fields"><input type="number" id="optLajeCusto" placeholder="R$" oninput="calc()"></div></div>
+  <div class="opt-row"><label class="chk opt-lbl"><input type="checkbox" id="optQuadro" onchange="calc()"><span>Quadro de Comando / CCM</span></label><div class="opt-fields"><input type="number" id="optQuadroCusto" placeholder="R$" oninput="calc()"></div></div>
+</div>
+</div>
+
+<!-- MÃO DE OBRA -->
+<div class="card only-full">
+<div class="ct">&#x1F477; M&#xE3;o de Obra</div>
+<div class="g4">
+  <div class="f"><label>Di&#xE1;ria da Equipe <span class="unit">R$/dia</span> <span class="req">*</span></label><input type="number" id="moDia" placeholder="Ex: 1400" oninput="calc()"></div>
+  <div class="f"><label>Dias de Obra <span class="hint">vazio = auto</span></label><input type="number" id="moDias" placeholder="Auto" oninput="calc()"></div>
+  <div class="f"><label>Adicional T&#xE9;cnico / Ge&#xF3;logo <span class="unit">R$</span></label><input type="number" id="moTec" placeholder="Ex: 900" oninput="calc()"></div>
+  <div class="f"><label>Encargos / BDI <span class="unit">%</span></label><input type="number" id="moBDI" value="25" step="0.5" oninput="calc()"></div>
+</div>
+<div class="gbox mt8"><span>&#x23F1;</span><span id="diasInfoTxt">Preencha o perfil para estimar os dias de obra.</span></div>
+</div>
+
+<!-- DESLOCAMENTO E ALOJAMENTO -->
+<div class="card only-full">
+<div class="ct">&#x1F697; Deslocamento &amp; Alojamento</div>
+<div class="ibox" style="margin-bottom:14px"><span>&#x2139;</span><div>
+  Informe a periodicidade do deslocamento. O custo de combust&#xED;vel &#xE9; calculado automaticamente conforme os dias de obra e a frequ&#xEA;ncia de retorno.
+</div></div>
+
+<div class="sdiv">Dados do Deslocamento</div>
+<div class="g4">
+  <div class="f"><label>Dist&#xE2;ncia Base &#x2192; Obra <span class="unit">km (ida)</span></label><input type="number" id="deslKm" placeholder="Ex: 80" oninput="calc()"></div>
+  <div class="f"><label>Consumo Ve&#xED;culo <span class="unit">km/L</span></label><input type="number" id="deslCons" value="10" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Ped&#xE1;gio por Viagem <span class="unit">R$</span></label><input type="number" id="deslPed" placeholder="Ex: 20" oninput="calc()"></div>
+  <div class="f"><label>Frequ&#xEA;ncia de Retorno</label>
+    <select id="deslFreq" onchange="calc()">
+      <option value="1">Di&#xE1;rio (vai e volta todo dia)</option>
+      <option value="7" selected>Semanal (retorna fim de semana)</option>
+      <option value="15">Quinzenal (retorna a cada 15 dias)</option>
+      <option value="30">Mensal (retorna fim do m&#xEA;s)</option>
+      <option value="0">Somente ida e volta (obra inteira)</option>
+    </select>
+  </div>
+</div>
+<div class="g4 mt8" id="deslTotaisBox">
+  <div class="f"><label>N&#xBA; Viagens (calc.)</label><input type="text" id="deslNViag" readonly></div>
+  <div class="f"><label>Litros Gasolina (calc.) <span class="unit">L</span></label><input type="text" id="deslLitros" readonly></div>
+  <div class="f"><label>Custo Combust&#xED;vel (calc.)</label><input type="text" id="deslCombCalc" readonly></div>
+  <div class="f"><label>Custo Ped&#xE1;gios (calc.)</label><input type="text" id="deslPedCalc" readonly></div>
+</div>
+
+<div class="sdiv">Alojamento</div>
+<div class="g2" style="margin-bottom:10px">
+  <label class="chk"><input type="checkbox" id="alojChk" onchange="toggleAloj();calc()"><span>Incluir custo de alojamento e alimenta&#xE7;&#xE3;o na obra</span></label>
+</div>
+<div id="alojBox" class="hidden">
+<div class="g4">
+  <div class="f"><label>Alojamento <span class="unit">R$/pessoa/dia</span></label><input type="number" id="alojDia" placeholder="Ex: 90" oninput="calc()"></div>
+  <div class="f"><label>Alimenta&#xE7;&#xE3;o <span class="unit">R$/pessoa/dia</span></label><input type="number" id="alojAlim" placeholder="Ex: 45" oninput="calc()"></div>
+  <div class="f"><label>N&#xBA; de Pessoas</label><input type="number" id="alojPess" placeholder="Ex: 4" oninput="calc()"></div>
+  <div class="f"><label>Dias de Alojamento <span class="hint">vazio = auto</span></label><input type="number" id="alojDias" placeholder="Auto" oninput="calc()"></div>
+</div>
+<div class="g4 mt8">
+  <div class="f"><label>Custo Alojamento (calc.)</label><input type="text" id="alojCustoCalc" readonly></div>
+  <div class="f"><label>Custo Alimenta&#xE7;&#xE3;o (calc.)</label><input type="text" id="alimCustoCalc" readonly></div>
+</div>
+</div>
+
+<div class="sdiv">Passagens A&#xE9;reas</div>
+<div class="g2" style="margin-bottom:10px">
+  <label class="chk"><input type="checkbox" id="passChk" onchange="togglePass();calc()"><span>Incluir passagens a&#xE9;reas</span></label>
+</div>
+<div id="passBox" class="hidden sep">
+<div class="g4">
+  <div class="f"><label>Custo Passagem ida+volta <span class="unit">R$/pessoa</span></label><input type="number" id="passValor" placeholder="Ex: 800" oninput="calc()"></div>
+  <div class="f"><label>N&#xBA; de Passageiros</label><input type="number" id-"passQtd" id="passQtd" placeholder="Ex: 2" oninput="calc()"></div>
+  <div class="f"><label>N&#xBA; de Viagens (total)</label><input type="number" id="passViag" placeholder="Ex: 3" oninput="calc()"></div>
+  <div class="f"><label>Custo Total Passagens (calc.)</label><input type="text" id="passCustoCalc" readonly></div>
+</div>
+</div>
+
+<div class="sdiv">Transporte de Equipamentos</div>
+<div class="g2" style="margin-bottom:10px">
+  <label class="chk"><input type="checkbox" id="tpProprio" onchange="toggleTP();calc()"><span>Transporte pr&#xF3;prio</span></label>
+  <label class="chk"><input type="checkbox" id="tpTerceiro" onchange="toggleTT();calc()"><span>Frete / terceiros</span></label>
+</div>
+<div id="tpProprioBox" class="hidden sep"><div class="g4">
+  <div class="f"><label>Dist&#xE2;ncia <span class="unit">km (ida+volta)</span></label><input type="number" id="tpKm" placeholder="Ex: 400" oninput="calc()"></div>
+  <div class="f"><label>Consumo <span class="unit">km/L</span></label><input type="number" id="tpCons" value="4" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>N&#xBA; Viagens</label><input type="number" id="tpViag" value="2" oninput="calc()"></div>
+  <div class="f"><label>Ped&#xE1;gio <span class="unit">R$</span></label><input type="number" id="tpPed" placeholder="Ex: 200" oninput="calc()"></div>
+  <div class="f"><label>Di&#xE1;ria Motorista <span class="unit">R$/dia</span></label><input type="number" id="tpMotoDia" placeholder="Ex: 200" oninput="calc()"></div>
+  <div class="f"><label>Dias em Tr&#xE2;nsito</label><input type="number" id="tpMotoDias" placeholder="Ex: 2" oninput="calc()"></div>
+</div></div>
+<div id="tpTerceiroBox" class="hidden sep"><div class="g3">
+  <div class="f"><label>Frete de Ida <span class="unit">R$</span></label><input type="number" id="ttIda" placeholder="Ex: 2500" oninput="calc()"></div>
+  <div class="f"><label>Frete de Volta <span class="unit">R$</span></label><input type="number" id="ttVolta" placeholder="Ex: 2500" oninput="calc()"></div>
+  <div class="f"><label>Outros Log&#xED;sticos <span class="unit">R$</span></label><input type="number" id="ttOutros" placeholder="Ex: 300" oninput="calc()"></div>
+</div></div>
+</div>
+
+<!-- INSUMOS -->
+<div class="card only-full">
+<div class="ct">&#x1F9FE; Insumos &amp; Despesas T&#xE9;cnicas</div>
+<div class="sdiv">Materiais de Perfura&#xE7;&#xE3;o</div>
+<div class="g4">
+  <div class="f"><label>Bentonita <span class="unit">sacos</span></label><input type="number" id="cotBentSacos" placeholder="Ex: 20" oninput="calc()"></div>
+  <div class="f"><label>Bentonita <span class="unit">R$/saco</span></label><input type="number" id="cotBentPreco" placeholder="Ex: 45" oninput="calc()"></div>
+  <div class="f"><label>Pol&#xED;mero CMC <span class="unit">sacos</span></label><input type="number" id="cotCMCSacos" placeholder="Ex: 5" oninput="calc()"></div>
+  <div class="f"><label>Pol&#xED;mero CMC <span class="unit">R$/saco</span></label><input type="number" id="cotCMCPreco" placeholder="Ex: 120" oninput="calc()"></div>
+  <div class="f"><label>Fluido / Lama &#x2014; Outros <span class="unit">R$</span></label><input type="number" id="cotFluido" placeholder="Ex: 300" oninput="calc()"></div>
+  <div class="f"><label>Ferramentas &amp; Desgaste <span class="unit">R$</span></label><input type="number" id="insFerr" placeholder="Ex: 700" oninput="calc()"></div>
+  <div class="f"><label>Outros Insumos <span class="unit">R$</span></label><input type="number" id="insOutros" placeholder="Ex: 400" oninput="calc()"></div>
+</div>
+<div class="sdiv">Licen&#xE7;as &amp; An&#xE1;lises</div>
+<div class="g4">
+  <div class="f"><label>ART / Projeto <span class="unit">R$</span></label><input type="number" id="despART" placeholder="Ex: 900" oninput="calc()"></div>
+  <div class="f"><label>Taxa Outorga / Licen&#xE7;a <span class="unit">R$</span></label><input type="number" id="despOutorg" placeholder="Ex: 600" oninput="calc()"></div>
+  <div class="f"><label>An&#xE1;lise F&#xED;sico-Qu&#xED;mica <span class="unit">R$</span></label><input type="number" id="despAnalise" placeholder="Ex: 380" oninput="calc()"></div>
+  <div class="f"><label>Seguro de Obra <span class="unit">R$</span></label><input type="number" id="despSeguro" placeholder="Ex: 350" oninput="calc()"></div>
+</div>
+<div class="sdiv">Ajustes Finais</div>
+<div class="g4">
+  <div class="f"><label>Manuten&#xE7;&#xE3;o &amp; Imprevistos <span class="unit">%</span> <span class="hint">m&#xED;n. 10%</span></label><input type="number" id="pManut" value="10" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Conting&#xEA;ncia <span class="unit">%</span></label><input type="number" id="pCont" value="5" step="0.5" oninput="calc()"></div>
+  <div class="f"><label>Margem Comercial <span class="unit">%</span></label><input type="number" id="pMarg" value="15" step="0.5" oninput="calc()"></div>
+</div>
+</div>
+
+<!-- RESULTADO -->
+<div id="resultBox" class="hidden">
+<div class="rbox">
+  <div class="rtitle">&#x1F4CA; RESUMO DO OR&#xC7;AMENTO</div>
+  <div style="font-size:11px;color:var(--txt3);margin-bottom:12px" id="resumoIdentif"></div>
+  <div class="kgrid" id="kpiArea"></div>
+  <div class="sdiv">Etapa 1 &#x2014; Tubo de Boca</div><div id="sumSelo"></div>
+  <div class="sdiv">Etapa 2 &#x2014; Sedimento</div><div id="sumSed"></div>
+  <div class="sdiv">Etapa 3 &#x2014; Rocha S&#xE3;</div><div id="sumRoc"></div>
+  <div class="sdiv">Canteiro, Bomba &amp; El&#xE9;trica</div>
+  <div class="sl"><span class="sll">Tapume</span><span class="slv" id="rTap">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Caixa de Lama (alvenaria)</span><span class="slv" id="rCxLama">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Loca&#xE7;&#xE3;o</span><span class="slv" id="rLocacao">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Bomba</span><span class="slv" id="rBomb">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Cabos El&#xE9;tricos</span><span class="slv" id="rCabos">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Coluna + Tubo N&#xED;vel</span><span class="slv" id="rCol">&#x2014;</span></div>
+  <div class="sl" id="rOptLn" style="display:none"><span class="sll">Itens Opcionais</span><span class="slv" id="rOpt">&#x2014;</span></div>
+  <div class="sdiv">M&#xE3;o de Obra</div>
+  <div class="sl"><span class="sll">Equipe</span><span class="slv" id="rMO">&#x2014;</span></div>
+  <div class="sl"><span class="sll">T&#xE9;cnico / Ge&#xF3;logo</span><span class="slv" id="rTec">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Encargos / BDI</span><span class="slv" id="rBDI">&#x2014;</span></div>
+  <div class="sdiv">Deslocamento &amp; Log&#xED;stica</div>
+  <div class="sl"><span class="sll">Combust&#xED;vel Deslocamento</span><span class="slv" id="rDesl">&#x2014;</span></div>
+  <div class="sl" id="rAlojLn" style="display:none"><span class="sll">Alojamento + Alimenta&#xE7;&#xE3;o</span><span class="slv" id="rAloj">&#x2014;</span></div>
+  <div class="sl" id="rPassLn" style="display:none"><span class="sll">Passagens A&#xE9;reas</span><span class="slv" id="rPass">&#x2014;</span></div>
+  <div class="sl" id="rTpLn" style="display:none"><span class="sll">Transporte Pr&#xF3;prio Equiptos</span><span class="slv" id="rTp">&#x2014;</span></div>
+  <div class="sl" id="rTtLn" style="display:none"><span class="sll">Frete / Terceiros</span><span class="slv" id="rTt">&#x2014;</span></div>
+  <div class="sdiv">Insumos &amp; Despesas</div>
+  <div class="sl"><span class="sll">Bentonita + CMC</span><span class="slv" id="rBent">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Fluido + Ferramentas</span><span class="slv" id="rFerr">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Licen&#xE7;as + ART + An&#xE1;lises</span><span class="slv" id="rLic">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Outros</span><span class="slv" id="rInsOutros">&#x2014;</span></div>
+  <div class="sdiv">Ajustes</div>
+  <div class="sl"><span class="sll">Manuten&#xE7;&#xE3;o &amp; Imprevistos</span><span class="slv" id="rManut">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Conting&#xEA;ncia</span><span class="slv" id="rCont">&#x2014;</span></div>
+  <div class="sl"><span class="sll">Margem Comercial</span><span class="slv" id="rMarg">&#x2014;</span></div>
+  <div class="stotal"><span class="stlbl">TOTAL GERAL</span><span class="stval" id="rTotal">R$ 0,00</span></div>
+  <div style="text-align:right;margin-top:5px;font-size:12px;color:var(--txt2)" id="rMetroTxt"></div>
+</div>
+<div class="frow mt20 no-print">
+  <button class="btn btn-gold btn-lg" onclick="salvar()">&#x1F4BE; Salvar</button>
+  <button class="btn btn-purple" onclick="abrirModalPrint()">&#x1F4C4; PDF / Imprimir</button>
+  <button class="btn btn-ghost" onclick="limpar()">&#x1F5D1; Limpar</button>
+</div>
+</div>
+</div>
+
+<!-- HISTÓRICO -->
+<div class="pane" id="pane-hist">
+<div class="fbetween" style="margin-bottom:16px">
+  <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:2px">Hist&#xF3;rico</div>
+  <div class="muted sm" id="histSub">Nenhum.</div></div>
+  <div class="frow">
+    <button class="btn btn-out btn-sm" onclick="importCSV()">&#x2B06; Restaurar</button>
+    <button class="btn btn-grn btn-sm" onclick="exportCSV()">&#x2B07; Backup / Export</button>
+    <button class="btn btn-red btn-sm" onclick="openDel()">&#x26A0; Limpar Tudo</button>
+  </div>
+</div>
+<div id="histEmpty" class="card tcenter" style="padding:50px 20px">
+  <div style="font-size:50px;margin-bottom:12px">&#x1F4ED;</div>
+  <div class="muted">Nenhum or&#xE7;amento salvo ainda</div>
+</div>
+<div id="histTable" class="twrap hidden">
+  <table class="ht"><thead><tr>
+    <th>ID</th><th>Projeto</th><th>N&#xBA; Po&#xE7;o</th><th>Data</th><th>Prof.</th><th>Dias</th><th>Total</th><th>Salvo em</th><th>A&#xE7;&#xF5;es</th>
+  </tr></thead><tbody id="histBody"></tbody></table>
+</div>
+</div>
+
+<!-- CONFIGURAÇÕES -->
+<div class="pane" id="pane-cfg">
+<div class="g2">
+  <div class="card"><div class="ct" style="margin-bottom:14px">&#x26FD; M&#xE1;quinas Padr&#xE3;o</div><div class="g2">
+    <div class="f"><label>Sonda Rotativa <span class="unit">L/h</span></label><input type="number" id="cfgLitRot" placeholder="20"></div>
+    <div class="f"><label>Bomba de Lama <span class="unit">L/h</span></label><input type="number" id="cfgLitLama" placeholder="8"></div>
+    <div class="f"><label>Sonda DTH <span class="unit">L/h</span></label><input type="number" id="cfgLitDTH" placeholder="32"></div>
+    <div class="f"><label>Compressor <span class="unit">L/h</span></label><input type="number" id="cfgLitComp" placeholder="25"></div>
+    <div class="f"><label>Horas/Dia</label><input type="number" id="cfgHDia" placeholder="10"></div>
+  </div></div>
+  <div class="card"><div class="ct" style="margin-bottom:14px">&#x1F4B0; Custos &amp; Margens Padr&#xE3;o</div><div class="g2">
+    <div class="f"><label>Di&#xE1;ria Equipe <span class="unit">R$/dia</span></label><input type="number" id="cfgMO" placeholder="1400"></div>
+    <div class="f"><label>BDI <span class="unit">%</span></label><input type="number" id="cfgBDI" placeholder="25"></div>
+    <div class="f"><label>Manuten&#xE7;&#xE3;o <span class="unit">%</span></label><input type="number" id="cfgManut" placeholder="10"></div>
+    <div class="f"><label>Conting&#xEA;ncia <span class="unit">%</span></label><input type="number" id="cfgCont" placeholder="5"></div>
+    <div class="f"><label>Margem <span class="unit">%</span></label><input type="number" id="cfgMarg" placeholder="15"></div>
+  </div></div>
+</div>
+<div class="frow mt16">
+  <button class="btn btn-gold" onclick="saveCfg()">&#x1F4BE; Salvar Configura&#xE7;&#xF5;es</button>
+  <button class="btn btn-ghost" onclick="resetCfg()">&#x21A9; Restaurar Padr&#xF5;es</button>
+</div>
+<div id="cfgOk" class="gbox mt12 hidden">&#x2705; Configura&#xE7;&#xF5;es salvas!</div>
+
+<div class="card mt16">
+  <div class="ct" style="margin-bottom:14px">&#x2601; Nuvem &#x2014; JSONBin.io</div>
+  <div class="ibox" style="margin-bottom:14px"><span>&#x2139;</span><div>
+    Cole sua <b>API Key</b> do JSONBin.io (come&#xE7;a com <code style="color:var(--gold)">$2b$...</code>).
+    Acesse <b>jsonbin.io &#x2192; API Keys</b> para copiar.<br>
+    O Bin ID &#xE9; criado automaticamente no primeiro envio e salvo aqui.
+  </div></div>
+  <div class="g2">
+    <div class="f s2"><label>X-Master-Key (API Key) <span class="req">*</span></label>
+      <input type="password" id="cfgJbKey" placeholder="$2b$10$..." autocomplete="off">
+    </div>
+    <div class="f s2"><label>Bin ID <span class="hint">preenchido automaticamente ap&#xF3;s 1&#xBA; envio</span></label>
+      <input type="text" id="cfgJbBin" placeholder="Ser&#xE1; gerado automaticamente">
+    </div>
+  </div>
+  <div class="frow mt12">
+    <button class="btn btn-grn" onclick="nuvemSalvar()">&#x2601; Salvar na Nuvem</button>
+    <button class="btn btn-blue" onclick="nuvemRestaurar()">&#x2935; Restaurar da Nuvem</button>
+    <button class="btn btn-gold" onclick="salvarCfgNuvem()">&#x1F4BE; Salvar API Key</button>
+  </div>
+  <div id="nuvemStatus" class="mt12 hidden"></div>
+</div>
+</div>
+
+</main>
+
+<!-- MODAIS -->
+<div class="mbg" id="modalDel">
+<div class="mbox">
+  <div class="mt-d">&#x26A0; Apagar Hist&#xF3;rico</div>
+  <div class="mbody">A&#xE7;&#xE3;o <b>irr&#xE9;vers&#xED;vel</b>. Digite <b style="color:var(--red);font-family:monospace">DELETE</b>:</div>
+  <input type="text" id="delInp" placeholder="Digite DELETE">
+  <div class="mact">
+    <button class="btn btn-ghost" onclick="closeModal('modalDel')">Cancelar</button>
+    <button class="btn btn-red" onclick="confirmDel()">Apagar</button>
+  </div>
+</div></div>
+
+<div class="mbg" id="modalView">
+<div class="mbox" style="max-width:560px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div class="mt-i">&#x1F4C4; Detalhes</div>
+    <button class="btn btn-ghost btn-sm" onclick="closeModal('modalView')">&#x2715;</button>
+  </div>
+  <div id="modalViewBody"></div>
+</div></div>
+
+<div class="mbg" id="modalPrint">
+<div class="mbox" style="max-width:480px">
+  <div class="mt-i">&#x1F5A8; PDF / Imprimir</div>
+  <div class="mbody">Escolha o conte&#xFA;do a ser impresso ou salvo em PDF:</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4CB; Or&#xE7;amento Completo</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">Todos os campos preenchidos, etapas detalhadas e resumo final</div>
+      <button class="btn btn-gold" style="width:100%" onclick="imprimirCompleto()">Imprimir / Salvar PDF Completo</button>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4CA; Apenas Resumo</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">Somente o resumo com KPIs e totais por categoria (1 p&#xE1;gina)</div>
+      <button class="btn btn-blue" style="width:100%" onclick="imprimirResumo()">Imprimir / Salvar PDF Resumo</button>
+    </div>
+  </div>
+  <div class="ybox mt12"><span>&#x1F4A1;</span><span>No di&#xE1;logo de impress&#xE3;o, selecione <b>"Salvar como PDF"</b> como destino para gerar o arquivo PDF.</span></div>
+  <div class="mact"><button class="btn btn-ghost" onclick="closeModal('modalPrint')">Fechar</button></div>
+</div></div>
+
+<!-- MODAL EXPORT -->
+<div class="mbg" id="modalExport">
+<div class="mbox" style="max-width:520px">
+  <div class="mt-i">&#x2B07; Backup / Exportar</div>
+  <div class="mbody">Escolha o formato de exportação:</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="background:var(--bg3);border:1px solid var(--green);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4BE; Backup Completo (.json) — <span style="color:var(--green)">RECOMENDADO</span></div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">
+        Exporta <b>todos os campos</b> de todos os orçamentos (snapshot completo).
+        Permite restauração 100% fiel — abre o orçamento para edição novamente.
+      </div>
+      <button class="btn btn-grn" style="width:100%" onclick="exportBackupJSON()">&#x1F4BE; Exportar Backup JSON</button>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4CB; Planilha Legível (.csv)</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">
+        Exporta resumo tabular (nome, cliente, totais, profundidade…) para Excel/Sheets.
+        <b style="color:var(--gold)">Não contém snapshot</b> — não permite reabrir para edição.
+      </div>
+      <button class="btn btn-out" style="width:100%" onclick="exportCSVLegivel()">&#x1F4CB; Exportar CSV Legível</button>
+    </div>
+  </div>
+  <div class="mact"><button class="btn btn-ghost" onclick="closeModal('modalExport')">Fechar</button></div>
+</div></div>
+
+<!-- MODAL IMPORT -->
+<div class="mbg" id="modalImport">
+<div class="mbox" style="max-width:520px">
+  <div class="mt-i">&#x2B06; Restaurar / Importar</div>
+  <div class="mbody">Escolha o tipo de arquivo:</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="background:var(--bg3);border:1px solid var(--green);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4BE; Restaurar Backup (.json) — <span style="color:var(--green)">RECOMENDADO</span></div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">
+        Restaura todos os campos completos. Orçamentos podem ser reabertos para edição.
+        Orçamentos com mesmo ID são atualizados; novos são adicionados.
+      </div>
+      <button class="btn btn-grn" style="width:100%" onclick="document.getElementById('jsonIn').click()">&#x1F4C2; Selecionar arquivo .json</button>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:8px;padding:16px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:4px">&#x1F4CB; Importar CSV Legível (.csv)</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px">
+        Importa apenas metadados (nome, totais, profundidade). Útil para migrar histórico antigo.
+        <b style="color:var(--gold)">Orçamentos não poderão ser reabertos para edição.</b>
+      </div>
+      <button class="btn btn-out" style="width:100%" onclick="document.getElementById('csvIn').click()">&#x1F4C2; Selecionar arquivo .csv</button>
+    </div>
+  </div>
+  <div class="mact"><button class="btn btn-ghost" onclick="closeModal('modalImport')">Fechar</button></div>
+</div></div>
+</body>
+</html>
+
+<script>
+const HKEY='pcc7_hist',CKEY='pcc7_cfg';
+const loadHist=()=>{try{return JSON.parse(localStorage.getItem(HKEY)||'[]');}catch(e){return[];}};
+const saveHist=d=>localStorage.setItem(HKEY,JSON.stringify(d));
+const loadCfg=()=>{try{return JSON.parse(localStorage.getItem(CKEY)||'{}');}catch(e){return{};}};
+const saveCfgD=d=>localStorage.setItem(CKEY,JSON.stringify(d));
+const v=id=>parseFloat(document.getElementById(id)?.value)||0;
+const s=id=>document.getElementById(id)?.value?.trim()||'';
+const chk=id=>document.getElementById(id)?.checked||false;
+const set=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val;};
+const show=(id,vis)=>document.getElementById(id)?.classList.toggle('hidden',!vis);
+const fmt=n=>'R$ '+(+n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const setTxt=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+const setHTML=(id,h)=>{const el=document.getElementById(id);if(el)el.innerHTML=h;};
+const dot=cor=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cor};margin-right:5px;vertical-align:middle"></span>`;
+
+function goTab(n){
+  ['novo','hist','cfg'].forEach(x=>{
+    document.getElementById('t-'+x).classList.toggle('on',x===n);
+    document.getElementById('pane-'+x).classList.toggle('on',x===n);
+  });
+  if(n==='hist')renderHist();
+  if(n==='cfg')loadCfgFields();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('pData').value=new Date().toISOString().split('T')[0];
+  applyDefaults();
+  onPerfChange();
+  updateCnt();
+});
+
+function applyDefaults(){
+  const c=loadCfg();
+  const ap=(id,val)=>{if(val!==undefined&&val!==null&&val!=='')set(id,val);};
+  ap('moDia',c.mo);ap('moBDI',c.bdi);ap('pManut',c.manut);ap('pCont',c.cont);ap('pMarg',c.marg);
+  ap('hDia',c.hDia);
+  if(c.litRot){set('litSondaRot',c.litRot);set('seloLitSonda',c.litRot);set('sedLitSonda',c.litRot);}
+  if(c.litLama){set('litLama',c.litLama);set('seloLitLama',c.litLama);set('sedLitLama',c.litLama);}
+  if(c.litDTH){set('litSondaDTH',c.litDTH);}
+  ap('litComp',c.litComp);
+}
+
+// ── PERFIL ────────────────────────────────────────────────────────────────
+function onPerfChange(){
+  const arg=v('mArgila'),are=v('mAreia'),cas=v('mCascalho'),ra=v('mRochaAlt'),rs=v('mRochaSa');
+  const sedTotal=arg+are+cas+ra;
+  const total=sedTotal+rs;
+  const seloP=chk('temSelo')?v('seloProf'):0;
+  const sedE2=Math.max(0,sedTotal-seloP);
+  set('profTotal',total>0?total.toFixed(1)+' m':'');
+  set('profSedCalc',sedTotal>0?sedTotal.toFixed(1)+' m':'');
+  set('profRocaCalc',rs>0?rs.toFixed(1)+' m':'');
+  set('sedProfCalc',sedE2>0?sedE2.toFixed(1)+' m':'(sem sedimento E2)');
+  set('rocProfCalc',rs>0?rs.toFixed(1)+' m':'(sem rocha sã)');
+  const bar=document.getElementById('profBar');
+  if(total>0){
+    bar.innerHTML=[
+      {p:seloP,c:'#3d90d8',l:'Boca'},
+      {p:sedE2,c:'#6888a8',l:'Sed.E2'},
+      {p:ra,c:'#8a6030',l:'R.Alt'},
+      {p:rs,c:'#e05f20',l:'R.Sã'}
+    ].map(sg=>{
+      const pct=(sg.p/total)*100;
+      return pct>0?`<div class="prof-seg" style="width:${pct.toFixed(1)}%;background:${sg.c}">${pct>=10?sg.l+' ('+sg.p.toFixed(0)+'m)':''}</div>`:'';
+    }).join('');
+  }else bar.innerHTML='';
+  calc();
+}
+
+function calcVelMedia(mArg,mAre,mRa,suffix){
+  const vA=v('velArg'+suffix),vAr=v('velAre'+suffix),vRa=v('velRocAlt'+suffix);
+  const tot=mArg+mAre+mRa;
+  if(tot<=0)return 0;
+  return (vA*mArg+vAr*mAre+vRa*mRa)/tot;
+}
+
+function syncCimPreco(){
+  const p=document.getElementById('seloCimPreco').value;
+  if(p)set('sedCimPreco',p);
+  calc();
+}
+
+// ── CAIXA DE LAMA ─────────────────────────────────────────────────────────
+function calcCaixaLama(){
+  const ml=v('cxLamaML'),fiadas=v('cxLamaFiadas')||5;
+  if(ml<=0){['cxLamaTijolos','cxLamaCimSacos','cxLamaAreiaSacos','cxLamaMassaKg','cxLamaAreiaRebocoSacos','cxLamaHH','cxLamaArea'].forEach(id=>set(id,''));calc();return;}
+  const area=ml*fiadas*0.115; // altura por fiada = 0,115m
+  const tijolos=Math.ceil(ml*fiadas*12*1.05);
+  // Argamassa assentamento: 10 sacos areia / 1 saco cimento (traço 1:10 volume)
+  const sacosCim=Math.ceil(tijolos/45);
+  const sacosAreia=sacosCim*10;
+  // Reboco: 15 kg/m² (2 faces = área x2)
+  const areaReboco=area*2;
+  const massaKg=Math.ceil(areaReboco*15);
+  const sacosReboco=Math.ceil(massaKg/20);
+  const sacosAreiaReboco=sacosReboco*2; // traço reboco: 1 cim : 2 areia (sacos massa já inclui cimento)
+  const hh=Math.ceil(tijolos/30+areaReboco/4);
+  set('cxLamaArea',area.toFixed(2));
+  set('cxLamaTijolos',tijolos);
+  set('cxLamaCimSacos',sacosCim);
+  set('cxLamaAreiaSacos',sacosAreia);
+  set('cxLamaMassaKg',massaKg);
+  set('cxLamaAreiaRebocoSacos',sacosAreiaReboco);
+  set('cxLamaHH',hh);
+  calc();
+}
+
+function calcPrefiltro(){
+  const rf=parseFloat(document.getElementById('sedFuroDiamSel')?.value)||0.3302;
+  const rt=parseFloat(document.getElementById('sedTuboDiamSel')?.value)||0.168;
+  const L=v('sedAnelarM');
+  if(rf>0&&rt>0&&L>0)set('sedAreiaMm3',(Math.PI*((rf/2)**2-(rt/2)**2)*L).toFixed(3));
+  else set('sedAreiaMm3','');
+  calc();
+}
+
+// ── ETAPA 1 ───────────────────────────────────────────────────────────────
+function calcE1(diesel,hd){
+  if(!chk('temSelo'))return{dias:0,custo:0,html:'<div class="sl"><span class="sll muted">Etapa não incluída</span></div>'};
+  const prof=v('seloProf')||20;
+  const litH=v('seloLitSonda')+v('seloLitLama');
+  const fases=[['Guia 8½"',v('seloVG'),'#35b068'],['Reab. 12½"',v('seloVR1'),'#d4960f'],
+               ['Reab. 17½"',v('seloVR2'),'#e05f20'],['Reab. 22"',v('seloVR3'),'#d84040']];
+  let tD=0,tH=0,tL=0,html='';
+  fases.forEach(([nm,vel,cor])=>{
+    if(vel<=0)return;
+    const d=prof/vel,h=d*hd,l=h*litH;
+    tD+=d;tH+=h;tL+=l;
+    html+=`<div class="sl"><span class="sll">${dot(cor)}${nm} — ${prof}m @ ${vel.toFixed(1)} m/dia</span><span class="slv">${diesel>0?fmt(l*diesel):'—'}</span></div>`;
+  });
+  const cComb=tL*diesel,cTubo=v('seloTuboCusto')*prof,cCim=v('seloCimSacos')*v('seloCimPreco');
+  html+=`<div class="sl"><span class="sll">Tubo Aço 14" (${prof}m)</span><span class="slv">${fmt(cTubo)}</span></div>`;
+  html+=`<div class="sl"><span class="sll">Cimentação (${v('seloCimSacos')} sacos)</span><span class="slv">${fmt(cCim)}</span></div>`;
+  const custo=cComb+cTubo+cCim;
+  set('seloDias',tD.toFixed(1));set('seloHoras',tH.toFixed(1));
+  set('seloLitros',tL.toFixed(0));set('seloCombTotal',diesel>0?fmt(cComb):'—');
+  setTxt('seloCustoTotal',fmt(custo));
+  return{dias:tD,custo,html};
+}
+
+// ── ETAPA 2 ───────────────────────────────────────────────────────────────
+function calcE2(diesel,hd){
+  const arg=v('mArgila'),are=v('mAreia'),cas=v('mCascalho'),ra=v('mRochaAlt');
+  const sedTotal=arg+are+cas+ra;
+  const seloP=chk('temSelo')?v('seloProf'):0;
+  const profE2=Math.max(0,sedTotal-seloP);
+  if(profE2<=0){
+    ['sedDias','sedHoras','sedLitros','sedCombTotal'].forEach(id=>set(id,''));
+    setTxt('sedCustoTotal','R$ 0,00');
+    set('sedProfCalc','(sem sedimento E2)');
+    return{dias:0,custo:0,html:'<div class="sl"><span class="sll muted">Sem sedimento abaixo do tubo de boca</span></div>'};
+  }
+  const ratio=profE2/sedTotal;
+  const mArgE2=arg*ratio,mAreE2=(are+cas)*ratio,mRaE2=ra*ratio;
+  const vG=calcVelMedia(mArgE2,mAreE2,mRaE2,'G');
+  const vR12=calcVelMedia(mArgE2,mAreE2,mRaE2,'R12');
+  const vR13=calcVelMedia(mArgE2,mAreE2,mRaE2,'R13');
+  set('sedVG',vG>0?vG.toFixed(1)+' m/dia':'—');
+  set('sedVR12',vR12>0?vR12.toFixed(1)+' m/dia':'—');
+  set('sedVR13',vR13>0?vR13.toFixed(1)+' m/dia':'—');
+  set('sedProfCalc',profE2.toFixed(1)+' m');
+  const litH=v('sedLitSonda')+v('sedLitLama');
+  const fases=[['Guia 8½"',vG,'#35b068'],['Reab. 12¼"',vR12,'#d4960f'],['Reab. 13"',vR13,'#e05f20']];
+  let tD=0,tH=0,tL=0,html='';
+  fases.forEach(([nm,vel,cor])=>{
+    if(vel<=0)return;
+    const d=profE2/vel,h=d*hd,l=h*litH;
+    tD+=d;tH+=h;tL+=l;
+    html+=`<div class="sl"><span class="sll">${dot(cor)}${nm} — ${profE2.toFixed(1)}m @ ${vel.toFixed(1)} m/dia</span><span class="slv">${diesel>0?fmt(l*diesel):'—'}</span></div>`;
+  });
+  const cTubo=v('sedTuboCusto')*v('sedTuboM');
+  const sedAreia=parseFloat(document.getElementById('sedAreiaMm3')?.value||0);
+  const cFiltros=chk('sedCaptacao')?v('sedFiltroCusto')*v('sedFiltroM')+sedAreia*v('sedAreiaCusto'):0;
+  const cCim=chk('sedCimento')?v('sedCimSacos')*v('sedCimPreco')+v('sedCimAdit'):0;
+  html+=`<div class="sl"><span class="sll">Tubo liso (${v('sedTuboM')}m)</span><span class="slv">${fmt(cTubo)}</span></div>`;
+  if(chk('sedCaptacao'))html+=`<div class="sl"><span class="sll">Filtros + pré-filtro areia</span><span class="slv">${fmt(cFiltros)}</span></div>`;
+  if(chk('sedCimento'))html+=`<div class="sl"><span class="sll">Cimentação anelar</span><span class="slv">${fmt(cCim)}</span></div>`;
+  const custo=tL*diesel+cTubo+cFiltros+cCim;
+  set('sedDias',tD.toFixed(1));set('sedHoras',tH.toFixed(1));
+  set('sedLitros',tL.toFixed(0));set('sedCombTotal',diesel>0?fmt(tL*diesel):'—');
+  setTxt('sedCustoTotal',fmt(custo));
+  return{dias:tD,custo,html};
+}
+
+// ── ETAPA 3 ───────────────────────────────────────────────────────────────
+function calcE3(diesel,hd){
+  const profRoc=v('mRochaSa');
+  const litDTH=v('litSondaDTH'),litComp=v('litComp');
+  set('rocVel',v('velRocSa').toFixed(1)+' m/dia');
+  set('rocProfCalc',profRoc>0?profRoc.toFixed(1)+' m':'(sem rocha sã)');
+  set('rocLitSondaInfo',litDTH+' L/h');
+  set('rocLitCompInfo',litComp+' L/h');
+  if(profRoc<=0){
+    ['rocDias','rocHoras','rocLitros','rocBits'].forEach(id=>set(id,''));
+    setTxt('rocCustoTotal','R$ 0,00');
+    return{dias:0,custo:0,html:'<div class="sl"><span class="sll muted">Sem rocha sã no perfil</span></div>'};
+  }
+  const vel=v('velRocSa')||1;
+  const litH=litDTH+litComp;
+  const dias=profRoc/vel,horas=dias*hd,litros=horas*litH;
+  const nBits=v('rocBitVida')>0?Math.ceil(profRoc/v('rocBitVida')):0;
+  const cBits=nBits*v('rocBitCusto');
+  const custo=litros*diesel+cBits;
+  set('rocDias',dias.toFixed(1));set('rocHoras',horas.toFixed(1));
+  set('rocLitros',litros.toFixed(0));set('rocBits',nBits.toString());
+  setTxt('rocCustoTotal',fmt(custo));
+  const html=
+    `<div class="sl"><span class="sll">${dot('#d84040')}Rocha Sã DTH — ${profRoc.toFixed(1)}m @ ${vel} m/dia</span><span class="slv">${diesel>0?fmt(litros*diesel):'—'}</span></div>`+
+    `<div class="sl"><span class="sll">Bits DTH (${nBits} × ${fmt(v('rocBitCusto'))})</span><span class="slv">${fmt(cBits)}</span></div>`;
+  return{dias,custo,html};
+}
+
+// ── CÁLCULO DESLOCAMENTO ──────────────────────────────────────────────────
+function calcDeslocamento(diasMO){
+  const km=v('deslKm'),cons=v('deslCons'),ped=v('deslPed'),gasolina=v('cotGasolina');
+  const freq=parseInt(document.getElementById('deslFreq')?.value||'7');
+  let nViag=0;
+  if(freq===0){nViag=2;} // só ida e volta (obra inteira)
+  else if(freq===1){nViag=diasMO*2;} // diário
+  else{nViag=Math.ceil(diasMO/freq)*2;} // semanal, quinzenal, mensal
+  const litros=cons>0&&km>0?(km*nViag)/cons:0;
+  const cComb=litros*gasolina;
+  const cPed=ped*nViag;
+  const total=cComb+cPed;
+  set('deslNViag',nViag.toString());
+  set('deslLitros',litros.toFixed(1));
+  set('deslCombCalc',gasolina>0?fmt(cComb):'—');
+  set('deslPedCalc',ped>0?fmt(cPed):'—');
+  return total;
+}
+
+// ── CÁLCULO PRINCIPAL ─────────────────────────────────────────────────────
+function calc(){
+  const diesel=v('diesel'),hd=v('hDia')||10;
+  const arg=v('mArgila'),are=v('mAreia'),cas=v('mCascalho'),ra=v('mRochaAlt'),rs=v('mRochaSa');
+  const prof=arg+are+cas+ra+rs;
+  if(prof<=0){show('resultBox',false);return;}
+
+  const e1=calcE1(diesel,hd);
+  const e2=calcE2(diesel,hd);
+  const e3=calcE3(diesel,hd);
+  const totDias=e1.dias+e2.dias+e3.dias;
+  const diasMO=v('moDias')>0?v('moDias'):totDias;
+
+  // Sugerir semanas de locação automaticamente
+  const semanasEl=document.getElementById('locSemanas');
+  if(semanasEl&&(!semanasEl.value||semanasEl.dataset.auto==='true')){
+    const semSug=Math.ceil(diasMO/7)||1;
+    semanasEl.value=semSug;
+    semanasEl.dataset.auto='true';
+  }
+
+  // Caixa de lama (usa preço de areia e cimento dos campos)
+  const cimPreco=v('seloCimPreco')||v('sedCimPreco')||0;
+  const cxLTijolos=parseInt(document.getElementById('cxLamaTijolos')?.value)||0;
+  const cxLCimSacos=parseInt(document.getElementById('cxLamaCimSacos')?.value)||0;
+  const cxLAreiaSacos=parseInt(document.getElementById('cxLamaAreiaSacos')?.value)||0;
+  const cxLMassaKg=parseInt(document.getElementById('cxLamaMassaKg')?.value)||0;
+  const cxLAreiaReboco=parseInt(document.getElementById('cxLamaAreiaRebocoSacos')?.value)||0;
+  const cxLHH=parseInt(document.getElementById('cxLamaHH')?.value)||0;
+  const cCxLama=cxLTijolos*v('cxLamaTijoloCusto')
+                +cxLCimSacos*cimPreco
+                +(cxLAreiaSacos+cxLAreiaReboco)*v('cxLamaAreiaCusto')
+                +Math.ceil(cxLMassaKg/20)*v('cxLamaMassaCusto')
+                +cxLHH*v('cxLamaHHCusto');
+  const cTap=v('tapCusto')*v('tapM');
+  const cLocacao=v('locCacamba')+v('locBanheiroSem')*v('locSemanas')+v('locOutros');
+  const cBomb=v('bombCusto');
+  const cCabos=v('caboEnergCusto')*v('caboEnergM')+v('caboSinalCusto')*v('caboSinalM');
+  const cCol=v('colCusto')*v('colM')+v('tubNivCusto')*v('tubNivM');
+  const cOpt=(chk('optReg')?v('optRegCusto'):0)+(chk('optCavalor')?v('optCavaleteCusto'):0)
+            +(chk('optLaje')?v('optLajeCusto'):0)+(chk('optQuadro')?v('optQuadroCusto'):0);
+  const moBase=v('moDia')*diasMO,moTec=v('moTec');
+  const moBDI=(moBase+moTec)*(v('moBDI')/100),totalMO=moBase+moTec+moBDI;
+
+  // Deslocamento com frequência
+  const cDesl=calcDeslocamento(diasMO);
+
+  // Alojamento
+  let cAloj=0,cAlojPuro=0,cAlimPuro=0;
+  if(chk('alojChk')){
+    const dAloj=v('alojDias')>0?v('alojDias'):diasMO;
+    cAlojPuro=v('alojDia')*v('alojPess')*dAloj;
+    cAlimPuro=v('alojAlim')*v('alojPess')*dAloj;
+    cAloj=cAlojPuro+cAlimPuro;
+    set('alojCustoCalc',fmt(cAlojPuro));
+    set('alimCustoCalc',fmt(cAlimPuro));
+  }
+
+  // Passagens aéreas
+  let cPass=0;
+  if(chk('passChk')){
+    cPass=v('passValor')*v('passQtd')*v('passViag');
+    set('passCustoCalc',fmt(cPass));
+  }
+
+  let cTp=0;
+  if(chk('tpProprio')){const lit=v('tpCons')>0?(v('tpKm')/v('tpCons'))*v('tpViag')*diesel:0;cTp=lit+v('tpPed')+v('tpMotoDia')*v('tpMotoDias');}
+  let cTt=0;
+  if(chk('tpTerceiro'))cTt=v('ttIda')+v('ttVolta')+v('ttOutros');
+  const cBent=v('cotBentSacos')*v('cotBentPreco'),cCMC=v('cotCMCSacos')*v('cotCMCPreco');
+  const cFluido=v('cotFluido'),cFerr=v('insFerr'),cInsOutros=v('insOutros');
+  const cLic=v('despART')+v('despOutorg')+v('despAnalise')+v('despSeguro');
+  const sub=e1.custo+e2.custo+e3.custo+cTap+cCxLama+cLocacao+cBomb+cCabos+cCol+cOpt+totalMO+cDesl+cAloj+cPass+cTp+cTt+cBent+cCMC+cFluido+cFerr+cInsOutros+cLic;
+  const aManut=sub*(v('pManut')/100);
+  const aCont=(sub+aManut)*(v('pCont')/100);
+  const aMarg=(sub+aManut+aCont)*(v('pMarg')/100);
+  const total=sub+aManut+aCont+aMarg;
+  const porM=prof>0?total/prof:0;
+
+  setTxt('diasInfoTxt',`E1:${e1.dias.toFixed(1)}d | E2:${e2.dias.toFixed(1)}d | E3:${e3.dias.toFixed(1)}d | Perfuração:${totDias.toFixed(1)}d | Obra(MO):${diasMO.toFixed(1)}d`);
+  show('resultBox',true);
+  const nome=s('pNome'),poco=s('pPoco'),cliente=s('pCliente'),local=s('pLocal'),dt=s('pData');
+  setHTML('resumoIdentif',`<b>${nome||'—'}</b>${poco?' | '+poco:''} ${cliente?'| '+cliente:''} ${local?'| '+local:''} ${dt?'| '+new Date(dt+'T12:00').toLocaleDateString('pt-BR'):''}`);
+  setHTML('kpiArea',[
+    {v:fmt(total),l:'Total do Orçamento'},{v:prof.toFixed(1)+' m',l:'Profundidade Total'},
+    {v:totDias.toFixed(1)+' d',l:'Dias de Perfuração'},{v:fmt(porM)+'/m',l:'Custo por Metro'},
+    {v:rs.toFixed(1)+'m',l:'Rocha Sã (E3)'},{v:diasMO.toFixed(1)+' d',l:'Dias de Obra'}
+  ].map(k=>`<div class="kpi"><div class="kv">${k.v}</div><div class="kl">${k.l}</div></div>`).join(''));
+  setHTML('sumSelo',e1.html);setHTML('sumSed',e2.html);setHTML('sumRoc',e3.html);
+  const ss=(id,n)=>setTxt(id,fmt(n));
+  ss('rTap',cTap);ss('rCxLama',cCxLama);ss('rLocacao',cLocacao);
+  ss('rBomb',cBomb);ss('rCabos',cCabos);ss('rCol',cCol);
+  document.getElementById('rOptLn').style.display=cOpt>0?'flex':'none';ss('rOpt',cOpt);
+  ss('rMO',moBase);ss('rTec',moTec);ss('rBDI',moBDI);ss('rDesl',cDesl);
+  document.getElementById('rAlojLn').style.display=chk('alojChk')?'flex':'none';ss('rAloj',cAloj);
+  document.getElementById('rPassLn').style.display=chk('passChk')?'flex':'none';ss('rPass',cPass);
+  document.getElementById('rTpLn').style.display=chk('tpProprio')?'flex':'none';ss('rTp',cTp);
+  document.getElementById('rTtLn').style.display=chk('tpTerceiro')?'flex':'none';ss('rTt',cTt);
+  ss('rBent',cBent+cCMC);ss('rFerr',cFluido+cFerr);ss('rLic',cLic);ss('rInsOutros',cInsOutros);
+  ss('rManut',aManut);ss('rCont',aCont);ss('rMarg',aMarg);
+  setTxt('rTotal',fmt(total));
+  setTxt('rMetroTxt',prof>0?'Custo unitário: '+fmt(porM)+' / metro perfurado':'');
+  window._res={total,totDias,porM,prof};
+}
+
+// ── TOGGLES ───────────────────────────────────────────────────────────────
+const toggleSelo=()=>{show('seloBox',chk('temSelo'));onPerfChange();};
+const toggleSedCaptacao=()=>show('sedFiltroBox',chk('sedCaptacao'));
+const toggleAloj=()=>show('alojBox',chk('alojChk'));
+const togglePass=()=>show('passBox',chk('passChk'));
+const toggleTP=()=>show('tpProprioBox',chk('tpProprio'));
+const toggleTT=()=>show('tpTerceiroBox',chk('tpTerceiro'));
+
+// Impede auto-sugestão de semanas quando usuário edita manualmente
+document.addEventListener('DOMContentLoaded',()=>{
+  const el=document.getElementById('locSemanas');
+  if(el)el.addEventListener('input',()=>{el.dataset.auto='false';});
+});
+
+// ── SALVAR / HISTÓRICO ────────────────────────────────────────────────────
+function salvar(){
+  const nome=s('pNome'),poco=s('pPoco');
+  if(!nome||!poco){alert('Preencha Nome do Projeto e Número do Poço.');return;}
+  const res=window._res||{};
+  const id='ORC-'+Date.now().toString(36).toUpperCase();
+  const snap={};
+  document.querySelectorAll('input,select').forEach(el=>{if(el.id)snap[el.id]=el.type==='checkbox'?el.checked:el.value;});
+  const litol=`Arg:${v('mArgila')}m Are:${v('mAreia')}m Cas:${v('mCascalho')}m RA:${v('mRochaAlt')}m RS:${v('mRochaSa')}m`;
+  const reg={id,nome,poco,data:s('pData'),cliente:s('pCliente'),local:s('pLocal'),obs:s('pObs'),
+    prof:res.prof||0,dias:res.totDias||0,total:res.total||0,litol,snap,savedAt:new Date().toISOString()};
+  const hist=loadHist();hist.unshift(reg);saveHist(hist);updateCnt();
+  alert('✅ Orçamento salvo! ID: '+id);
+}
+function updateCnt(){document.getElementById('hcnt').textContent=loadHist().length;}
+
+function renderHist(){
+  const hist=loadHist();
+  document.getElementById('histSub').textContent=hist.length===0?'Nenhum orçamento.':hist.length+' orçamento(s).';
+  show('histEmpty',hist.length===0);show('histTable',hist.length>0);
+  if(!hist.length)return;
+  document.getElementById('histBody').innerHTML=hist.map((r,i)=>{
+    const dt=r.data?new Date(r.data+'T12:00').toLocaleDateString('pt-BR'):'—';
+    const sv=new Date(r.savedAt).toLocaleString('pt-BR');
+    const tot='R$ '+r.total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+    return `<tr>
+      <td class="tdm" style="font-size:10px;color:var(--txt3)">${r.id}</td>
+      <td><strong>${r.nome}</strong>${r.cliente?'<br><span class="muted sm">'+r.cliente+'</span>':''}</td>
+      <td class="tdm">${r.poco}</td><td class="tdm">${dt}</td>
+      <td class="tdm">${r.prof} m</td>
+      <td class="tdm">${r.dias?r.dias.toFixed(1)+'d':'—'}</td>
+      <td class="tdm tgold"><strong>${tot}</strong></td>
+      <td class="tdm" style="font-size:10px;color:var(--txt3)">${sv}</td>
+      <td><div class="acts">
+        <button class="btn btn-ghost btn-sm" onclick="verOrc(${i})">👁</button>
+        <button class="btn btn-out btn-sm" onclick="carregarOrc(${i})">↩</button>
+        <button class="btn btn-red btn-sm" onclick="delOrc(${i})">🗑</button>
+      </div></td></tr>`;
+  }).join('');
+}
+
+function verOrc(i){
+  const r=loadHist()[i];
+  const dt=r.data?new Date(r.data+'T12:00').toLocaleDateString('pt-BR'):'—';
+  const row=(l,vv)=>`<div class="sl"><span class="sll">${l}</span><span class="slv">${vv}</span></div>`;
+  setHTML('modalViewBody',
+    row('ID',`<span style="font-size:11px;font-family:monospace">${r.id}</span>`)+
+    row('Projeto',`<strong>${r.nome}</strong>`)+row('Nº Poço',r.poco)+row('Data',dt)+
+    row('Cliente',r.cliente||'—')+row('Local',r.local||'—')+
+    row('Profundidade',r.prof+' m')+row('Perfil',r.litol||'—')+
+    row('Dias',r.dias?r.dias.toFixed(1)+' d':'—')+
+    row('Salvo em',new Date(r.savedAt).toLocaleString('pt-BR'))+
+    `<div class="stotal"><span class="stlbl">TOTAL</span><span class="stval">R$ ${r.total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span></div>`);
+  openModal('modalView');
+}
+
+function carregarOrc(i){
+  const r=loadHist()[i];
+  if(!r.snap){alert('Snapshot não disponível.');return;}
+  Object.entries(r.snap).forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(el.type==='checkbox')el.checked=val;else el.value=val;
+  });
+  toggleSelo();toggleSedCaptacao();toggleAloj();togglePass();toggleTP();toggleTT();
+  onPerfChange();goTab('novo');
+}
+
+function delOrc(i){
+  if(!confirm('Remover?'))return;
+  const hist=loadHist();hist.splice(i,1);saveHist(hist);updateCnt();renderHist();
+}
+
+function limpar(){
+  if(!confirm('Limpar todos os campos?'))return;
+  document.querySelectorAll('#pane-novo input,#pane-novo select').forEach(el=>{
+    if(el.type==='checkbox')el.checked=false;else el.value='';
+  });
+  document.getElementById('pData').value=new Date().toISOString().split('T')[0];
+  const defs={moBDI:25,pManut:10,pCont:5,pMarg:15,hDia:10,
+    seloProf:20,seloVG:6,seloVR1:7,seloVR2:7,seloVR3:8,seloLitSonda:20,seloLitLama:8,
+    sedLitSonda:20,sedLitLama:8,
+    velArgG:6,velArgR12:7,velArgR13:8,velAreG:18,velAreR12:22,velAreR13:24,
+    velRocAltG:10,velRocAltR12:13,velRocAltR13:14,velRocSa:35,
+    litSondaRot:20,litLama:8,litSondaDTH:32,litComp:25,
+    rocBitVida:150,tpCons:4,tpViag:2,deslCons:10,cxLamaFiadas:5,
+    mArgila:0,mAreia:0,mCascalho:0,mRochaAlt:0,mRochaSa:0};
+  Object.entries(defs).forEach(([id,val])=>set(id,val));
+  document.getElementById('temSelo').checked=true;
+  document.getElementById('sedCimento').checked=true;
+  document.getElementById('deslFreq').value='7';
+  show('seloBox',true);show('sedFiltroBox',false);
+  show('alojBox',false);show('passBox',false);
+  show('tpProprioBox',false);show('tpTerceiroBox',false);show('resultBox',false);
+  applyDefaults();onPerfChange();
+}
+
+// ── MODAIS ────────────────────────────────────────────────────────────────
+const openModal=id=>document.getElementById(id).classList.add('on');
+const closeModal=id=>document.getElementById(id).classList.remove('on');
+const openDel=()=>{set('delInp','');openModal('modalDel');};
+function confirmDel(){
+  if(document.getElementById('delInp').value.trim()!=='DELETE'){alert('Digite exatamente DELETE.');return;}
+  saveHist([]);updateCnt();renderHist();closeModal('modalDel');alert('Histórico apagado.');
+}
+['modalDel','modalView','modalPrint','modalExport','modalImport'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('click',e=>{if(e.target.id===id)closeModal(id);});
+});
+function abrirModalPrint(){openModal('modalPrint');}
+
+// ── IMPRESSÃO / PDF ───────────────────────────────────────────────────────
+function imprimirCompleto(){
+  closeModal('modalPrint');
+  document.body.classList.remove('print-resumo');
+  document.body.classList.add('print-full');
+  setTimeout(()=>{window.print();document.body.classList.remove('print-full');},300);
+}
+function imprimirResumo(){
+  closeModal('modalPrint');
+  document.body.classList.remove('print-full');
+  document.body.classList.add('print-resumo');
+  // No resumo, mostrar apenas resultBox e identificação
+  setTimeout(()=>{window.print();document.body.classList.remove('print-resumo');},300);
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────────────────────
+// ── EXPORT: abre modal de escolha ─────────────────────────────────────────
+function exportCSV(){openModal('modalExport');}
+function importCSV(){openModal('modalImport');}
+
+// ── BACKUP COMPLETO (JSON) ────────────────────────────────────────────────
+function exportBackupJSON(){
+  const hist=loadHist();
+  if(!hist.length){alert('Nenhum orçamento para exportar.');closeModal('modalExport');return;}
+  const payload=JSON.stringify({versao:'pcc7',exportadoEm:new Date().toISOString(),total:hist.length,orcamentos:hist},null,2);
+  _download(payload,'pococalc_backup_'+_datestamp()+'.json','application/json;charset=utf-8');
+  closeModal('modalExport');
+}
+
+// ── EXPORT CSV LEGÍVEL (sem snap) ─────────────────────────────────────────
+function exportCSVLegivel(){
+  const hist=loadHist();
+  if(!hist.length){alert('Nenhum orçamento para exportar.');closeModal('modalExport');return;}
+  const SEP=';';
+  const qq=str=>'"'+String(str||'').replace(/"/g,'""')+'"';
+  const header=['ID','Projeto','NumeroPoco','Data','Cliente','Local','Profundidade_m','Perfil_Litologico',
+    'Dias_Perfuracao','Total_RS','Observacoes','SalvoEm'].join(SEP);
+  const rows=hist.map(r=>[
+    r.id,qq(r.nome),qq(r.poco),r.data||'',qq(r.cliente||''),qq(r.local||''),
+    r.prof,qq(r.litol||''),(r.dias||0).toFixed(1),
+    r.total.toFixed(2).replace('.',','),qq(r.obs||''),
+    new Date(r.savedAt).toLocaleString('pt-BR')
+  ].join(SEP));
+  const bom=String.fromCharCode(0xFEFF);
+  _download(bom+header+'\r\n'+rows.join('\r\n'),'pococalc_resumo_'+_datestamp()+'.csv','text/csv;charset=utf-8');
+  closeModal('modalExport');
+}
+
+// ── RESTORE BACKUP JSON ───────────────────────────────────────────────────
+function handleImportJSON(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const obj=JSON.parse(ev.target.result);
+      if(!obj.orcamentos||!Array.isArray(obj.orcamentos))throw new Error('Formato de backup inválido.');
+      const existing=loadHist();
+      const ids=new Set(existing.map(x=>x.id));
+      let added=0,updated=0;
+      obj.orcamentos.forEach(r=>{
+        if(!r.id)return;
+        if(ids.has(r.id)){
+          // Atualiza registro existente (preserva snap mais recente)
+          const idx=existing.findIndex(x=>x.id===r.id);
+          if(idx>=0){existing[idx]=r;updated++;}
+        }else{
+          existing.unshift(r);ids.add(r.id);added++;
+        }
+      });
+      saveHist(existing);updateCnt();renderHist();
+      closeModal('modalImport');
+      alert('✅ Backup restaurado!\nAdicionados: '+added+'\nAtualizados: '+updated);
+    }catch(err){alert('Erro ao restaurar backup: '+err.message);}
+    e.target.value='';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+// ── IMPORT CSV LEGÍVEL (só metadados, sem snap) ───────────────────────────
+function handleImportCSV(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const raw=ev.target.result.replace(/^\uFEFF/,'');
+      const lines=raw.split(/\r?\n/).filter(l=>l.trim().length>0);
+      if(lines.length<2){alert('CSV vazio ou inválido.');return;}
+      const existing=loadHist();const ids=new Set(existing.map(x=>x.id));
+      let added=0;
+      for(let i=1;i<lines.length;i++){
+        const cols=_parseCsvLine(lines[i]);if(cols.length<9)continue;
+        const oid=cols[0].trim();if(!oid||ids.has(oid))continue;
+        existing.push({id:oid,nome:cols[1],poco:cols[2],data:cols[3],cliente:cols[4],
+          local:cols[5],prof:parseFloat(cols[6])||0,litol:cols[7]||'',
+          dias:parseFloat(cols[8])||0,
+          total:parseFloat((cols[9]||'0').replace(',','.'))||0,
+          obs:cols[10]||'',savedAt:new Date().toISOString(),
+          snap:null});
+        added++;ids.add(oid);
+      }
+      saveHist(existing);updateCnt();renderHist();
+      closeModal('modalImport');
+      alert('✅ '+added+' orçamento(s) importado(s).\n⚠ CSV legível não contém snapshot — orçamentos não podem ser reabertos para edição.');
+    }catch(err){alert('Erro ao importar: '+err.message);}
+    e.target.value='';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function _download(content,filename,mime){
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},600);
+}
+function _datestamp(){return new Date().toISOString().slice(0,10);}
+function _parseCsvLine(line){
+  const result=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===';'&&!inQ){result.push(cur.trim());cur='';}
+    else cur+=c;
+  }
+  result.push(cur.trim());return result;
+}
+// mantém alias antigo para compatibilidade com botões inline
+function parseLine(l){return _parseCsvLine(l);}
+function handleImport(e){handleImportJSON(e);}
+
+// ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────
+function loadCfgFields(){
+  const c=loadCfg();
+  const m={cfgLitRot:c.litRot,cfgLitLama:c.litLama,cfgLitDTH:c.litDTH,cfgLitComp:c.litComp,
+    cfgHDia:c.hDia,cfgMO:c.mo,cfgBDI:c.bdi,cfgManut:c.manut,cfgCont:c.cont,cfgMarg:c.marg,
+    cfgJbKey:c.jbKey,cfgJbBin:c.jbBin};
+  Object.entries(m).forEach(([id,val])=>{if(val!==undefined&&val!==null&&val!=='')set(id,val);});
+}
+function saveCfg(){
+  const g=id=>{const el=document.getElementById(id);return el?el.value:'';};
+  saveCfgD({litRot:g('cfgLitRot'),litLama:g('cfgLitLama'),litDTH:g('cfgLitDTH'),litComp:g('cfgLitComp'),
+    hDia:g('cfgHDia'),mo:g('cfgMO'),bdi:g('cfgBDI'),manut:g('cfgManut'),cont:g('cfgCont'),marg:g('cfgMarg')});
+  show('cfgOk',true);setTimeout(()=>show('cfgOk',false),2500);
+}
+function salvarCfgNuvem(){
+  const key=document.getElementById('cfgJbKey')?.value?.trim();
+  const bin=document.getElementById('cfgJbBin')?.value?.trim();
+  if(!key){alert('Informe a API Key do JSONBin.');return;}
+  const c=loadCfg();
+  saveCfgD({...c,jbKey:key,jbBin:bin||''});
+  nuvemMsg('gbox','✅ API Key salva com sucesso!');
+}
+function resetCfg(){
+  if(!confirm('Restaurar padrões?'))return;
+  localStorage.removeItem(CKEY);loadCfgFields();
+}
+
+// ── NUVEM — JSONBin.io ────────────────────────────────────────────────────
+function nuvemMsg(tipo,txt){
+  const el=document.getElementById('nuvemStatus');
+  if(!el)return;
+  el.className=tipo+' mt12';
+  el.innerHTML=txt;
+  el.classList.remove('hidden');
+  if(tipo==='gbox')setTimeout(()=>el.classList.add('hidden'),4000);
+}
+
+async function nuvemSalvar(){
+  const c=loadCfg();
+  const key=document.getElementById('cfgJbKey')?.value?.trim()||c.jbKey||'';
+  const binId=document.getElementById('cfgJbBin')?.value?.trim()||c.jbBin||'';
+  if(!key){nuvemMsg('wbox','⚠️ Configure a API Key antes de salvar.');return;}
+  const hist=loadHist();
+  if(!hist.length){nuvemMsg('wbox','⚠️ Nenhum orçamento para salvar.');return;}
+  const payload={versao:'pcc7',exportadoEm:new Date().toISOString(),total:hist.length,orcamentos:hist};
+  nuvemMsg('ybox','⏳ Enviando para a nuvem...');
+  try{
+    let url,method,headers;
+    headers={'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Private':'false'};
+    if(binId){
+      // Atualiza bin existente (PUT)
+      url='https://api.jsonbin.io/v3/b/'+binId;
+      method='PUT';
+    }else{
+      // Cria nova bin (POST)
+      url='https://api.jsonbin.io/v3/b';
+      method='POST';
+      headers['X-Bin-Name']='PococalcPro_Backup';
+    }
+    const resp=await fetch(url,{method,headers,body:JSON.stringify(payload)});
+    const data=await resp.json();
+    if(!resp.ok)throw new Error(data.message||'Erro '+resp.status);
+    // Salva o Bin ID gerado
+    const newBinId=data.metadata?.id||binId;
+    if(newBinId){
+      set('cfgJbBin',newBinId);
+      const cc=loadCfg();
+      saveCfgD({...cc,jbKey:key,jbBin:newBinId});
+    }
+    nuvemMsg('gbox','✅ Backup salvo na nuvem! '+hist.length+' orçamento(s). Bin ID: '+(newBinId||'—'));
+  }catch(err){
+    nuvemMsg('wbox','❌ Erro ao salvar: '+err.message);
+  }
+}
+
+async function nuvemRestaurar(){
+  const c=loadCfg();
+  const key=document.getElementById('cfgJbKey')?.value?.trim()||c.jbKey||'';
+  const binId=document.getElementById('cfgJbBin')?.value?.trim()||c.jbBin||'';
+  if(!key||!binId){nuvemMsg('wbox','⚠️ Configure a API Key e o Bin ID antes de restaurar.');return;}
+  if(!confirm('Restaurar da nuvem? Os orçamentos existentes serão mesclados (novos adicionados, existentes atualizados).'))return;
+  nuvemMsg('ybox','⏳ Buscando backup na nuvem...');
+  try{
+    const resp=await fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{
+      headers:{'X-Master-Key':key}
+    });
+    const data=await resp.json();
+    if(!resp.ok)throw new Error(data.message||'Erro '+resp.status);
+    const obj=data.record;
+    if(!obj||!Array.isArray(obj.orcamentos))throw new Error('Formato de backup inválido.');
+    const existing=loadHist();
+    const ids=new Set(existing.map(x=>x.id));
+    let added=0,updated=0;
+    obj.orcamentos.forEach(r=>{
+      if(!r.id)return;
+      if(ids.has(r.id)){
+        const idx=existing.findIndex(x=>x.id===r.id);
+        if(idx>=0){existing[idx]=r;updated++;}
+      }else{existing.unshift(r);ids.add(r.id);added++;}
+    });
+    saveHist(existing);updateCnt();
+    nuvemMsg('gbox','✅ Restaurado! Adicionados: '+added+' | Atualizados: '+updated);
+    if(document.getElementById('pane-hist')?.classList.contains('on'))renderHist();
+  }catch(err){
+    nuvemMsg('wbox','❌ Erro ao restaurar: '+err.message);
+  }
+}
+
+</script>
+</body>
+</html>
